@@ -18,7 +18,6 @@ trait PKHashable
 
     /**
      * Retrieve the model for a bound value.
-     *
      */
     public function scopeFindByUnhashKey($query, string $hashed, ?string $field = 'id')
     {
