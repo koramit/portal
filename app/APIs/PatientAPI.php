@@ -213,8 +213,8 @@ class PatientAPI
         $SOAPStr .= '<soap:Body>';
         $SOAPStr .= '<'.$functionName.' xmlns="http://tempuri.org/">';
         $SOAPStr .= '<'.$keyName.'>'.$keyValue.'</'.$keyName.'>';
-        $SOAPStr .= '<'.$userTag.'>'.config('app.SIMHIS_API_USERNAME').'</'.$userTag.'>';
-        $SOAPStr .= '<Password>'.config('app.SIMHIS_API_PASSWORD').'</Password>';
+        $SOAPStr .= '<'.$userTag.'>'.config('simrs.api_username').'</'.$userTag.'>';
+        $SOAPStr .= '<Password>'.config('simrs.api_password').'</Password>';
         $SOAPStr .= '<RequestComputerName></RequestComputerName>';
         $SOAPStr .= '</'.$functionName.'>';
         $SOAPStr .= '</soap:Body>';
