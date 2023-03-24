@@ -15,7 +15,7 @@ class UserAPI
     {
         $headers = [
             'APPNAME' => config('siad.check_user_app_name'),
-            'APIKEY' => config('said.check_user_api_key'),
+            'APIKEY' => config('siad.check_user_api_key'),
         ];
 
         $response = $this->makePost(config('siad.check_user_url'), ['id' => $login], $headers);
