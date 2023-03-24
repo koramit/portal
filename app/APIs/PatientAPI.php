@@ -87,6 +87,8 @@ class PatientAPI
             return $patient;
         }
 
+        $patient['age'] = $patient['dob'] ? now()->diffInYears($patient['dob']) : null;
+        $patient['dob'] = null;
         $patient['document_id'] = null;
         $patient['race'] = null;
         $patient['nation'] = null;
