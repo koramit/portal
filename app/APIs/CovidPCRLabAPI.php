@@ -43,10 +43,10 @@ class CovidPCRLabAPI
         }
     }
 
-    public function getLabs(string $hn, string $dateLab): array
+    public function getLabs(int|string $hn, string $dateLab): array
     {
         $form = [
-            'HN' => $hn,
+            'HN' => (string) $hn,
             'GROUP' => true,
             'GROUP_SERVICE_ID' => $this->COVID_LAB_CODES,
             'START_DATE' => Carbon::create($dateLab)->subDays($this->START_DATE_OFFSET)->format('Y-m-d'),

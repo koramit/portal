@@ -17,17 +17,17 @@ class CovidVaccineAPI
         11 => 'COVOVAX',
     ];
 
-    public function __invoke(string $cid, $raw = false): array
+    public function __invoke(int|string $cid, $raw = false): array
     {
         try {
             $result = Http::asJson()
                 ->retry(3, 200)
-                ->post(config('covid.vaccine_url'), ['cid' => $cid])
+                ->post(config('covid.vaccine_url'), ['cid' => (string) $cid])
                 ->json();
         } catch (Exception $e) {
             Log::notice('get_vaccine_api@'.$e->getMessage());
 
-            return ['ok' => false, 'serverError' => false];
+            return ['ok' => false, 'serverError' => false, 'message' => $e->getMessage()];
         }
 
         if (!$result || !isset($result['MessageCode'])) {
