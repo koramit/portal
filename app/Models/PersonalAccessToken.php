@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Sanctum\PersonalAccessToken as SanctumPersonalAccessToken;
 
-
 class PersonalAccessToken extends SanctumPersonalAccessToken
 {
     use PKHashable;

@@ -7,7 +7,6 @@ use App\Contracts\PatientAPI;
 
 class FakePatientAPI implements PatientAPI, AdmissionAPI
 {
-
     public function getPatient(int $hn, bool $withSensitiveInfo): array
     {
         // TODO: Implement getAdmission() method.

@@ -59,9 +59,9 @@ class FakeUserAPI implements UserAPI
         $gender = (mt_rand() / mt_getrandmax()) >= 0.6 ? 'female' : 'male';
 
         if ($gender === 'male') {
-            $full_name = $faker->firstNameMale() . ' FakeUserAPI.php' .$faker->lastName();
+            $full_name = $faker->firstNameMale().' FakeUserAPI.php'.$faker->lastName();
         } else {
-            $full_name = $faker->firstNameFemale() . ' FakeUserAPI.php' .$faker->lastName();
+            $full_name = $faker->firstNameFemale().' FakeUserAPI.php'.$faker->lastName();
         }
 
         return [
