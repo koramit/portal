@@ -5,6 +5,7 @@ namespace App\Traits;
 use Hashids\Hashids;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
+/** @property string $hashed_key */
 trait PKHashable
 {
     /**
@@ -18,7 +19,6 @@ trait PKHashable
 
     /**
      * Retrieve the model for a bound value.
-     *
      */
     public function scopeFindByUnhashKey($query, string $hashed, ?string $field = 'id')
     {

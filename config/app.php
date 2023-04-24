@@ -214,5 +214,6 @@ return [
 
     // env config
     'query_time_threshold' => env('QUERY_TIME_THRESHOLD', 2000), // in milliseconds
+    'user_api_provider' => env('USER_API_PROVIDER', App\APIs\FakeUserAPI::class),
 
 ];
