@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Traits\PKHashable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -12,18 +13,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    use HasApiTokens, HasFactory, Notifiable, PKHashable;
 
     /**
      * The attributes that should be hidden for serialization.
@@ -41,7 +31,8 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'expire_at' => 'datetime',
+        'line_notify_token' => 'encrypted',
     ];
 
     public function roles(): BelongsToMany
@@ -85,14 +76,16 @@ class User extends Authenticatable
         );
     }
 
-    public function assignRole(Role $role): void
+    public function attachRole(Role $role): void
     {
         $this->roles()->syncWithoutDetaching($role);
+        $this->flushPrivileges();
+    }
 
-        $roles = $this->roles()->with('abilities')->get();
-        cache()->put("uid-$this->id-abilities", $roles->map->abilities->flatten()->pluck('name')->unique(), config('session.lifetime') * 60);
-        cache()->put("uid-$this->id-role-names", $roles->pluck('name'), config('session.lifetime') * 60);
-        cache()->put("uid-$this->id-role-labels", $roles->pluck('label'), config('session.lifetime') * 60);
+    public function detachRole(Role $role): void
+    {
+        $this->roles()->detach($role);
+        $this->flushPrivileges();
     }
 
     public function hasAbility(string|int $ability): bool
@@ -127,5 +120,12 @@ class User extends Authenticatable
         cache()->forget("uid-$this->id-role-names");
         cache()->forget("uid-$this->id-role-labels");
         cache()->forget("uid-$this->id-abilities-id");
+    }
+
+    public function lineNotifyEnabled(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->line_notify_token !== null,
+        );
     }
 }

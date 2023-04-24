@@ -64,4 +64,7 @@ return [
         'encrypt_cookies' => App\Http\Middleware\EncryptCookies::class,
     ],
 
+    // custom config starts here
+    'expiration_days' => env('TOKEN_EXPIRATION_DAYS', 60),
+
 ];

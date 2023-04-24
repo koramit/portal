@@ -5,6 +5,7 @@ namespace App\Traits;
 use Hashids\Hashids;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
+/** @property string $hashed_key */
 trait PKHashable
 {
     /**

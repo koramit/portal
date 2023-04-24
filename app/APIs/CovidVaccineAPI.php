@@ -30,7 +30,7 @@ class CovidVaccineAPI
             return ['ok' => false, 'serverError' => false, 'message' => $e->getMessage()];
         }
 
-        if (!$result || !isset($result['MessageCode'])) {
+        if (! $result || ! isset($result['MessageCode'])) {
             return ['ok' => false, 'serverError' => true];
         }
 
@@ -69,5 +69,4 @@ class CovidVaccineAPI
 
         return ['ok' => true, 'found' => true, 'vaccinations' => $vaccinations];
     }
-
 }

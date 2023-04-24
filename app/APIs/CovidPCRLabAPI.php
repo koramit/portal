@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 class CovidPCRLabAPI
 {
     protected ?string $API_TOKEN; // expires in 1 hour
+
     protected string $TOKEN_CACHE_KEY = 'covid-pcr-lab-token';
 
     protected array $COVID_LAB_CODES = ['204592', '204593', '5565'];
@@ -23,6 +24,7 @@ class CovidPCRLabAPI
     {
         if ($token = cache($this->TOKEN_CACHE_KEY)) {
             $this->API_TOKEN = $token;
+
             return;
         }
 
@@ -33,7 +35,7 @@ class CovidPCRLabAPI
                 ->post(config('covid.auth_url'), [
                     'client_id' => config('covid.id'),
                     'client_secret' => config('covid.secret'),
-                    'grant_type' => 'client_credentials'
+                    'grant_type' => 'client_credentials',
                 ])->json()['access_token'];
 
             cache()->put($this->TOKEN_CACHE_KEY, $this->API_TOKEN, now()->addHour());
@@ -43,7 +45,7 @@ class CovidPCRLabAPI
         }
     }
 
-    public function getLabs(int|string $hn, string $dateLab): array
+    public function __invoke(int|string $hn, string $dateLab): array
     {
         $form = [
             'HN' => (string) $hn,
@@ -92,6 +94,7 @@ class CovidPCRLabAPI
                     'result' => 'pending?',
                 ];
             }
+
             return [
                 'date_lab' => $lab['REPORT_DATE'],
                 'note' => $lab['NOTE'] ?? null,
@@ -104,7 +107,7 @@ class CovidPCRLabAPI
         return [
             'ok' => true,
             'found' => true,
-            'labs' => $labs
+            'labs' => $labs,
         ];
     }
 }

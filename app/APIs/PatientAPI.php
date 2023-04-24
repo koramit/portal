@@ -187,7 +187,7 @@ class PatientAPI
         ];
     }
 
-    public function getPatientRecentlyAdmit(int|string $hn, bool $withSensitiveInfo)
+    public function getPatientRecentlyAdmission(int|string $hn, bool $withSensitiveInfo)
     {
         $cacheKey = 'recently-admit-'.$hn;
         if ($admission = Cache::get($cacheKey)) {
