@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\PersonalAccessTokenController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\InitRootController;
 use App\Http\Controllers\Auth\LINENotifySetupController;
 use App\Http\Controllers\Auth\RegisterUserController;
 use App\Http\Controllers\Auth\TwoFactorsChallengeController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PersonalAccessTokenController;
 use App\Http\Controllers\RevokeServiceRequestFormController;
 use App\Http\Controllers\ServiceRequestFormController;
 use Illuminate\Support\Facades\Route;
