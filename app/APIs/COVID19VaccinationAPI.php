@@ -2,11 +2,12 @@
 
 namespace App\APIs;
 
+use App\Contracts\COVID19VaccinationAPI as Covid19VaccinationAPIContract;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class CovidVaccineAPI
+class COVID19VaccinationAPI implements Covid19VaccinationAPIContract
 {
     protected array $BRANDS = [
         1 => 'AstraZeneca',

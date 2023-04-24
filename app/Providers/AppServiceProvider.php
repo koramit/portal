@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Contracts\AdmissionAPI;
+use App\Contracts\COVID19PCRLabAPI;
+use App\Contracts\COVID19VaccinationAPI;
+use App\Contracts\PatientAPI;
 use App\Contracts\UserAPI;
 use App\Models\PersonalAccessToken;
 use Hashids\Hashids;
@@ -23,7 +27,15 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(Hashids::class, fn () => new Hashids(salt: config('app.key')));
 
-        $this->app->bind(UserAPI::class, config('app.user_api_provider'));
+        $this->app->bind(UserAPI::class, config('app.user_provider'));
+
+        $this->app->bind(PatientAPI::class, config('app.patient_provider'));
+
+        $this->app->bind(AdmissionAPI::class, config('app.admission_provider'));
+
+        $this->app->bind(COVID19VaccinationAPI::class, config('app.covid19_vaccination_provider'));
+
+        $this->app->bind(COVID19PCRLabAPI::class, config('app.covid19_pcr_lab_provider'));
     }
 
     /**

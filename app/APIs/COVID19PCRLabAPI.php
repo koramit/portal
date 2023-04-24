@@ -2,12 +2,13 @@
 
 namespace App\APIs;
 
+use App\Contracts\COVID19PCRLabAPI as Covid19PCRLabAPIContract;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class CovidPCRLabAPI
+class COVID19PCRLabAPI implements Covid19PCRLabAPIContract
 {
     protected ?string $API_TOKEN; // expires in 1 hour
 

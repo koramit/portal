@@ -1,6 +1,6 @@
 <?php
 
-namespace App\APIs;
+namespace App\APIs\Fake;
 
 use App\Contracts\UserAPI;
 use Faker\Factory;
@@ -59,9 +59,9 @@ class FakeUserAPI implements UserAPI
         $gender = (mt_rand() / mt_getrandmax()) >= 0.6 ? 'female' : 'male';
 
         if ($gender === 'male') {
-            $full_name = $faker->firstNameMale().' '.$faker->lastName();
+            $full_name = $faker->firstNameMale() . ' FakeUserAPI.php' .$faker->lastName();
         } else {
-            $full_name = $faker->firstNameFemale().' '.$faker->lastName();
+            $full_name = $faker->firstNameFemale() . ' FakeUserAPI.php' .$faker->lastName();
         }
 
         return [

@@ -2,10 +2,12 @@
 
 namespace App\APIs;
 
+use App\Contracts\AdmissionAPI;
+use App\Contracts\PatientAPI as PatientAPIContract;
 use App\Traits\CurlExecutable;
 use Illuminate\Support\Facades\Cache;
 
-class PatientAPI
+class PatientAPI implements PatientAPIContract, AdmissionAPI
 {
     use CurlExecutable;
 
@@ -18,7 +20,7 @@ class PatientAPI
         'message' => 'Server Error',
     ];
 
-    public function getPatient(string $hn, bool $withSensitiveInfo): array
+    public function getPatient(int $hn, bool $withSensitiveInfo): array
     {
         $functionName = 'SearchPatientDataDescriptionTypeExcludeD'; // return alive and dead patient
         $action = 'http://tempuri.org/'.$functionName;
@@ -106,7 +108,7 @@ class PatientAPI
         return $patient;
     }
 
-    public function getAdmission(int|string $an, bool $withSensitiveInfo): array
+    public function getAdmission(int $an, bool $withSensitiveInfo): array
     {
         $functionName = 'SearchInpatientAllByAN';
         $action = 'http://tempuri.org/'.$functionName;
@@ -139,7 +141,7 @@ class PatientAPI
         return $this->handleAdmitData($data, $withSensitiveInfo);
     }
 
-    public function getPatientAdmissions(int|string $hn, bool $withSensitiveInfo): array
+    public function getPatientAdmissions(int $hn, bool $withSensitiveInfo): array
     {
         $functionName = 'SearchInpatientAll';
         $action = 'http://tempuri.org/'.$functionName;
@@ -187,7 +189,7 @@ class PatientAPI
         ];
     }
 
-    public function getPatientRecentlyAdmission(int|string $hn, bool $withSensitiveInfo)
+    public function getPatientRecentlyAdmission(int $hn, bool $withSensitiveInfo): array
     {
         $cacheKey = 'recently-admit-'.$hn;
         if ($admission = Cache::get($cacheKey)) {

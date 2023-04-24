@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
-use App\APIs\PatientAPI;
+use App\Contracts\PatientAPI;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 

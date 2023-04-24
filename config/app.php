@@ -214,6 +214,9 @@ return [
 
     // env config
     'query_time_threshold' => env('QUERY_TIME_THRESHOLD', 2000), // in milliseconds
-    'user_api_provider' => env('USER_API_PROVIDER', App\APIs\FakeUserAPI::class),
-
+    'user_provider' => env('USER_PROVIDER', '\App\APIs\Fake\FakeUserAPI'),
+    'patient_provider' => env('PATIENT_PROVIDER', '\App\APIs\Fake\FakePatientAPI'),
+    'admission_provider' => env('ADMISSION_PROVIDER', '\App\APIs\Fake\FakePatientAPI'),
+    'covid19_vaccination_provider' => env('COVID19_VACCINATION_PROVIDER', '\App\APIs\Fake\FakeCOVID19VaccinationAPI'),
+    'covid19_pcr_lab_provider' => env('COVID19_PCR_LAB_PROVIDER', '\App\APIs\Fake\FakeCOVID19PCRLabAPI'),
 ];
