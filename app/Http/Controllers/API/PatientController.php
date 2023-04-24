@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\API;
 
-use App\APIs\PatientAPI;
+use App\Contracts\AdmissionAPI;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class PatientController extends Controller
 {
-    public function __invoke(Request $request, PatientAPI $api)
+    public function __invoke(Request $request, AdmissionAPI $api)
     {
         $validated = $request->validate([
             'hn' => ['required', 'digits:8'],

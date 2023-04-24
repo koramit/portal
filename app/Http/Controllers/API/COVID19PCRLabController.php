@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\API;
 
-use App\APIs\CovidPCRLabAPI;
+use App\Contracts\COVID19PCRLabAPI;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class COVID19PCRLabController extends Controller
 {
-    public function __invoke(Request $request, CovidPCRLabAPI $api)
+    public function __invoke(Request $request, COVID19PCRLabAPI $api)
     {
         $validated = $request->validate([
             'hn' => ['required', 'digits:8'],
