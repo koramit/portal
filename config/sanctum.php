@@ -66,5 +66,5 @@ return [
 
     // custom config starts here
     'expiration_days' => env('TOKEN_EXPIRATION_DAYS', 60),
-
+    'failed_attempts_per_minute' => env('FAILED_ATTEMPTS_PER_MINUTE', 5),
 ];
