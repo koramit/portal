@@ -2,12 +2,13 @@
 
 namespace App\APIs;
 
+use App\Contracts\UserAPI as UserAPIContract;
 use App\Traits\CurlExecutable;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class UserAPI
+class UserAPI implements UserAPIContract
 {
     use CurlExecutable;
 
