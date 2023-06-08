@@ -20,13 +20,14 @@ class AuthenticateUserController extends Controller
 
         $withSensitiveInfo = $request->route()->getName() === 'api.authenticate-with-sensitive-data';
 
+        $data = $api->authenticate($validated['login'], $validated['password'], $withSensitiveInfo);
         $this->log(
             $request->bearerToken(),
             $validated,
             $request->route()->getName(),
-            true,
+            $data['found'] ?? false,
         );
 
-        return $api->authenticate($validated['login'], $validated['password'], $withSensitiveInfo);
+        return $data;
     }
 }

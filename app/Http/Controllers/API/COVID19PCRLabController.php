@@ -4,10 +4,12 @@ namespace App\Http\Controllers\API;
 
 use App\Contracts\COVID19PCRLabAPI;
 use App\Http\Controllers\Controller;
+use App\Traits\ServiceAccessLoggable;
 use Illuminate\Http\Request;
 
 class COVID19PCRLabController extends Controller
 {
+    use ServiceAccessLoggable;
     public function __invoke(Request $request, COVID19PCRLabAPI $api)
     {
         $validated = $request->validate([
@@ -15,6 +17,14 @@ class COVID19PCRLabController extends Controller
             'date_lab' => ['required', 'date_format:Y-m-d'],
         ]);
 
-        return $api($validated['hn'], $validated['date_lab']);
+        $data = $api($validated['hn'], $validated['date_lab']);
+        $this->log(
+            $request->bearerToken(),
+            $validated,
+            $request->route()->getName(),
+            $data['found'] ?? false,
+        );
+
+        return $data;
     }
 }
