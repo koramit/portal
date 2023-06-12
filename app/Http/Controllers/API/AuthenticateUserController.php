@@ -14,7 +14,7 @@ class AuthenticateUserController extends Controller
     public function __invoke(Request $request, UserAPI $api)
     {
         $validated = $request->validate([
-            'login' => ['required', 'regex:/^[a-zA-Z]{1,24}\.[a-zA-Z]{3}$/'],
+            'login' => ['required', 'regex:/^[a-zA-Z]{1,24}\....$/'],
             'password' => ['required', 'string'],
         ]);
 
