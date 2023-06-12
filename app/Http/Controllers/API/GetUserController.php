@@ -15,7 +15,7 @@ class GetUserController extends Controller
     {
         $validated = $request->validate([
             'org_id' => ['nullable', 'digits:8', 'required_without_all:login'],
-            'login' => ['nullable', 'regex:/^[a-zA-Z]{1,24}\....$/', 'required_without_all:org_id'],
+            'login' => ['nullable', 'regex:/^([a-zA-Z]{1,24}\.[a-zA-Z]{3})|([a-zA-Z]{1,24}\.[a-zA-Z]{2}-)$/', 'required_without_all:org_id'],
             'with_sensitive_data' => ['nullable', 'boolean'],
         ]);
 
