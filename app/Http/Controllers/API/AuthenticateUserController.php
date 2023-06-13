@@ -14,7 +14,7 @@ class AuthenticateUserController extends Controller
     public function __invoke(Request $request, UserAPI $api)
     {
         $validated = $request->validate([
-            'login' => ['required', 'regex:/^[a-zA-Z]{1,24}\.[a-zA-Z]{3}$|^[a-zA-Z]{1,24}\.[a-zA-Z]{2}-$/'],
+            'login' => ['required', config('siad.login_format_validate_rule')],
             'password' => ['required', 'string'],
         ]);
 
