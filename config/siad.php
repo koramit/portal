@@ -18,5 +18,5 @@ return [
     'auth_user_app_name' => env('SIAD_AUTH_USER_APP_NAME'),
     'auth_user_api_key' => env('SIAD_AUTH_USER_API_KEY'),
     'user_status_url' => env('SIAD_USER_STATUS_URL'),
-    'login_format_validate_rule' => 'regex:/^[a-zA-Z]{1,24}\.[a-zA-Z]{3}$|^[a-zA-Z]{1,24}\.[a-zA-Z]{2}-$/',
+    'login_format_validate_rule' => 'regex:/^(?!-)(?!.*--)[a-zA-Z-]{1,23}(?<!-)\.[a-zA-Z]{3}$|^(?!-)(?!.*--)[a-zA-Z-]{1,23}(?<!-)\.[a-zA-Z]{2}-$/',
 ];
