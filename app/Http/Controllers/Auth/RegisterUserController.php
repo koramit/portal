@@ -24,11 +24,11 @@ class RegisterUserController extends Controller
             'full_name' => ['required', 'string'],
             'password' => ['required', 'string', 'confirmed',
                 Password::min(8)
-                ->letters()
-                ->mixedCase()
-                ->numbers()
-                ->symbols()
-                ->uncompromised()],
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+                    ->uncompromised()],
         ]);
 
         $user = User::query()

@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Models\PersonalAccessToken;
 use App\Notifications\LINEBaseNotification;
-use App\Notifications\Messages\LINENotifyMessage;
 use Illuminate\Console\Command;
 
 class TokenExpiredReminder extends Command
@@ -35,7 +34,7 @@ class TokenExpiredReminder extends Command
                 if ($token->status !== 'active') {
                     return;
                 }
-                $notification = new LINEBaseNotification("Your token {$token->name} will be expired in {$token->expires_at->diffForHumans()}.");
+                $notification = new LINEBaseNotification("Your token $token->name will be expired in {$token->expires_at->diffForHumans()}.");
                 $token->tokenable->notify($notification);
             });
     }

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 class COVID19PCRLabController extends Controller
 {
     use ServiceAccessLoggable;
+
     public function __invoke(Request $request, COVID19PCRLabAPI $api)
     {
         $validated = $request->validate([

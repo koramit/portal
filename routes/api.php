@@ -70,4 +70,4 @@ Route::middleware('auth:sanctum')
         Route::post('/covid-19-pcr-labs', COVID19PCRLabController::class)
             ->middleware('ability:covid19:pcr-labs')
             ->name('api.covid-19-pcr-labs');
-});
+    });
