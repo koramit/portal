@@ -8,6 +8,7 @@ use App\Http\Controllers\API\GetUserController;
 use App\Http\Controllers\API\PatientAdmissionController;
 use App\Http\Controllers\API\PatientController;
 use App\Http\Controllers\API\PatientRecentlyAdmissionController;
+use App\Http\Controllers\API\WardAdmissionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -70,4 +71,8 @@ Route::middleware('auth:sanctum')
         Route::post('/covid-19-pcr-labs', COVID19PCRLabController::class)
             ->middleware('ability:covid19:pcr-labs')
             ->name('api.covid-19-pcr-labs');
-});
+
+        Route::post('/ward-admissions', WardAdmissionController::class)
+            ->middleware('ability:ward:admissions')
+            ->name('api.ward-admissions');
+    });

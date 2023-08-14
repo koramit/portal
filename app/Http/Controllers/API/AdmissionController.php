@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 class AdmissionController extends Controller
 {
     use ServiceAccessLoggable;
+
     public function __invoke(Request $request, PatientAPI $api)
     {
         $validated = $request->validate([

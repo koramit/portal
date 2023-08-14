@@ -2,28 +2,27 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Contracts\COVID19PCRLabAPI;
+use App\APIs\WardAPI;
 use App\Http\Controllers\Controller;
 use App\Traits\ServiceAccessLoggable;
 use Illuminate\Http\Request;
 
-class COVID19PCRLabController extends Controller
+class WardAdmissionController extends Controller
 {
     use ServiceAccessLoggable;
 
-    public function __invoke(Request $request, COVID19PCRLabAPI $api)
+    public function __invoke(Request $request, WardAPI $api)
     {
         $validated = $request->validate([
-            'hn' => ['required', 'digits:8'],
-            'date_lab' => ['required', 'date_format:Y-m-d'],
+            'number' => ['nullable', 'exists:wards,id'],
         ]);
 
-        $data = $api($validated['hn'], $validated['date_lab']);
+        $data = $api->getWard($validated['number'] ?? null);
         $this->log(
             $request->bearerToken(),
             $validated,
             $request->route()->getName(),
-            $data['found'] ?? false,
+            true,
         );
 
         return $data;

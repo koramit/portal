@@ -75,6 +75,142 @@ namespace App\Models{
 	class PersonalAccessToken extends \Eloquent {}
 }
 
+namespace App\Models\Resources{
+/**
+ * App\Models\Resources\Admission
+ *
+ * @property int $id
+ * @property int $an
+ * @property int $hn
+ * @property string $name
+ * @property \Illuminate\Support\Carbon|null $dob
+ * @property int $gender
+ * @property string|null $discharge_type_name
+ * @property string|null $discharge_status_name
+ * @property \Illuminate\Support\Carbon|null $admitted_at
+ * @property \Illuminate\Support\Carbon|null $discharged_at
+ * @property int $ward_id
+ * @property int $attending_staff_id
+ * @property \Illuminate\Support\Carbon $checked_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Resources\AdmissionTransfer> $admissionTransfers
+ * @property-read int|null $admission_transfers_count
+ * @property-read \App\Models\Resources\Ward $ward
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission whereAdmittedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission whereAn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission whereAttendingStaffId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission whereCheckedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission whereDischargeStatusName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission whereDischargeTypeName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission whereDischargedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission whereDob($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission whereGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission whereHn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission whereWardId($value)
+ */
+	class Admission extends \Eloquent {}
+}
+
+namespace App\Models\Resources{
+/**
+ * App\Models\Resources\AdmissionCall
+ *
+ * @property int $id
+ * @property int $an
+ * @property int $found
+ * @property int $retry
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|AdmissionCall newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|AdmissionCall newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|AdmissionCall query()
+ * @method static \Illuminate\Database\Eloquent\Builder|AdmissionCall whereAn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AdmissionCall whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AdmissionCall whereFound($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AdmissionCall whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AdmissionCall whereRetry($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AdmissionCall whereUpdatedAt($value)
+ */
+	class AdmissionCall extends \Eloquent {}
+}
+
+namespace App\Models\Resources{
+/**
+ * App\Models\Resources\AdmissionTransfer
+ *
+ * @property int $id
+ * @property int $admission_id
+ * @property int $ward_id
+ * @property int $attending_staff_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|AdmissionTransfer newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|AdmissionTransfer newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|AdmissionTransfer query()
+ * @method static \Illuminate\Database\Eloquent\Builder|AdmissionTransfer whereAdmissionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AdmissionTransfer whereAttendingStaffId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AdmissionTransfer whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AdmissionTransfer whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AdmissionTransfer whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AdmissionTransfer whereWardId($value)
+ */
+	class AdmissionTransfer extends \Eloquent {}
+}
+
+namespace App\Models\Resources{
+/**
+ * App\Models\Resources\AttendingStaff
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $license_no
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|AttendingStaff newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|AttendingStaff newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|AttendingStaff query()
+ * @method static \Illuminate\Database\Eloquent\Builder|AttendingStaff whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AttendingStaff whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AttendingStaff whereLicenseNo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AttendingStaff whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AttendingStaff whereUpdatedAt($value)
+ */
+	class AttendingStaff extends \Eloquent {}
+}
+
+namespace App\Models\Resources{
+/**
+ * App\Models\Resources\Ward
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $name_short
+ * @property string|null $number
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Resources\Admission> $admissions
+ * @property-read int|null $admissions_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Ward newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Ward newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Ward query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Ward whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ward whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ward whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ward whereNameShort($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ward whereNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ward whereUpdatedAt($value)
+ */
+	class Ward extends \Eloquent {}
+}
+
 namespace App\Models{
 /**
  * App\Models\Role
