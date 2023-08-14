@@ -76,6 +76,13 @@ class User extends Authenticatable
         );
     }
 
+    public function lineNotifyEnabled(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->line_notify_token !== null,
+        );
+    }
+
     public function attachRole(Role $role): void
     {
         $this->roles()->syncWithoutDetaching($role);
@@ -114,18 +121,11 @@ class User extends Authenticatable
         });
     }
 
-    public function flushPrivileges()
+    public function flushPrivileges(): void
     {
         cache()->forget("uid-$this->id-abilities");
         cache()->forget("uid-$this->id-role-names");
         cache()->forget("uid-$this->id-role-labels");
         cache()->forget("uid-$this->id-abilities-id");
-    }
-
-    public function lineNotifyEnabled(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->line_notify_token !== null,
-        );
     }
 }

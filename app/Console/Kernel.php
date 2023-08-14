@@ -13,6 +13,14 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('token:expired-reminder')->timezone('Asia/Bangkok')->at('08:00');
+
+        // tracking in-patient
+        $schedule->command('admission:update-list')->hourlyAt(0);
+        $schedule->command('admission:update-list')->hourlyAt(10);
+        $schedule->command('admission:build-list')->hourlyAt(15);
+        $schedule->command('admission:update-list')->hourlyAt(30);
+        $schedule->command('admission:build-list')->hourlyAt(45);
+        $schedule->command('admission:update-list')->hourlyAt(50);
     }
 
     /**

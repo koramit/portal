@@ -17,6 +17,7 @@ class RoleUserService
         ['label' => 'Admission data', 'name' => 'admission_developer'],
         ['label' => 'COVID-19 Vaccine/PCR', 'name' => 'covid_developer'],
         ['label' => 'Service without rate limit', 'name' => 'dev_ops'],
+        ['label' => 'Ward data', 'name' => 'ward_developer'],
     ];
 
     const FORM_RULES = [
@@ -28,6 +29,7 @@ class RoleUserService
         'covid_developer' => ['sometimes', 'accepted'],
         'dev_ops' => ['sometimes', 'accepted'],
         'note' => ['required', 'string', 'min:128', 'max:1024'],
+        'ward_developer' => ['sometimes', 'accepted'],
     ];
 
     const TOKEN_ABILITIES = [
@@ -42,6 +44,7 @@ class RoleUserService
         ['ability' => 'user:sensitive-data', 'name' => 'user_sensitive_data', 'label' => 'User sensitive data', 'can' => 'view_user_sensitive_data'],
         ['ability' => 'patient:sensitive-data', 'name' => 'patient_sensitive_data', 'label' => 'Patient sensitive data', 'can' => 'view_patient_sensitive_data'],
         ['ability' => 'rate-limit:none', 'name' => 'rate_limit_none', 'label' => 'No rate limit', 'can' => 'create_no_rate_limit_app'],
+        ['ability' => 'ward:admissions', 'name' => 'ward_admissions', 'label' => 'Ward data', 'can' => 'create_ward_app'],
     ];
 
     public function attachRoles(ServiceRequestForm $form): void
