@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 class COVID19VaccinationController extends Controller
 {
     use ServiceAccessLoggable;
+
     public function __invoke(Request $request, COVID19VaccinationAPI $api)
     {
         $validated = $request->validate([

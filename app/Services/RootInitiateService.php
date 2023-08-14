@@ -12,9 +12,9 @@ class RootInitiateService
     {
         return (bool) cache()->rememberForever('root-initiated', function () {
             return Role::query()
-                    ->withCount('users')
-                    ->where('name', 'root')
-                    ->first()?->users_count > 0;
+                ->withCount('users')
+                ->where('name', 'root')
+                ->first()?->users_count > 0;
         });
     }
 
