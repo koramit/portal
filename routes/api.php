@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AdmissionController;
+use App\Http\Controllers\API\AdmissionDischargeDateController;
 use App\Http\Controllers\API\AuthenticateUserController;
 use App\Http\Controllers\API\COVID19PCRLabController;
 use App\Http\Controllers\API\COVID19VaccinationController;
@@ -75,4 +76,8 @@ Route::middleware('auth:sanctum')
         Route::post('/ward-admissions', WardAdmissionController::class)
             ->middleware('ability:ward:admissions')
             ->name('api.ward-admissions');
+
+        Route::post('/admission-discharge-date', AdmissionDischargeDateController::class)
+            ->middleware('ability:ward:admissions')
+            ->name('api.admission-discharge-date');
     });
