@@ -92,15 +92,3 @@ Route::delete('/app-tokens/{token}', [PersonalAccessTokenController::class, 'des
 // init root
 Route::get('/init-root/{code}', InitRootController::class)
     ->middleware(['auth']);
-
-// temporary check tracking in-patient
-Route::get('/check-tracking-in-patient', function () {
-    return [
-        'a' => \App\Models\Resources\Admission::query()->count(),
-        'w' => \App\Models\Resources\Ward::query()->count(),
-        's' => \App\Models\Resources\AttendingStaff::query()->count(),
-        'c' => \App\Models\Resources\AdmissionCall::query()->count(),
-        't' => \App\Models\Resources\AdmissionTransfer::query()->count(),
-        'l' => \App\Models\Resources\AdmissionCall::query()->latest('updated_at')->first()->updated_at->diffForHumans(now()),
-    ];
-});
