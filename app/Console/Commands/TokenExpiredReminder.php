@@ -28,6 +28,7 @@ class TokenExpiredReminder extends Command
     public function handle(): void
     {
         PersonalAccessToken::query()
+            ->with('tokenable')
             ->where('status', 1) // active
             ->where('expires_at', '<', now()->addDays(5)) // start reminder 5 days before expiration
             ->each(function (PersonalAccessToken $token) {
