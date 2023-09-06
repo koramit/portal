@@ -51,7 +51,7 @@ class AppServiceProvider extends ServiceProvider
 
         $threshold = config('app.query_time_threshold');
         DB::whenQueryingForLongerThan($threshold, function (Connection $connection, QueryExecuted $event) use ($threshold) {
-            Log::warning("Database queries exceeded $threshold milliseconds on {$connection->getName()} : $event->sql");
+            Log::warning("Database queries exceeded $threshold milliseconds ({$event->time} ms) on {$connection->getName()} : $event->sql");
         });
 
         Relation::enforceMorphMap([
