@@ -27,8 +27,9 @@ class UpdateAdmissionTime extends Command
     public function handle(): void
     {
         $first = Admission::query()->find(1);
-        if (!$first || $first->updated_at->greaterThan('2023-01-01')) {
+        if (! $first || $first->updated_at->greaterThan('2023-01-01')) {
             $this->info('Already updated.');
+
             return;
         }
 

@@ -28,7 +28,7 @@ class RootInitiateService
 
     public function verifyCode(int $code): bool
     {
-        if (cache('root-initiate-code') !== $code) {
+        if ($code !== cache('root-initiate-code')) {
             return false;
         }
 

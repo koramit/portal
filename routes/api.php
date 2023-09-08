@@ -6,6 +6,7 @@ use App\Http\Controllers\API\AuthenticateUserController;
 use App\Http\Controllers\API\COVID19PCRLabController;
 use App\Http\Controllers\API\COVID19VaccinationController;
 use App\Http\Controllers\API\GetUserController;
+use App\Http\Controllers\API\ItemizeController;
 use App\Http\Controllers\API\PatientAdmissionController;
 use App\Http\Controllers\API\PatientController;
 use App\Http\Controllers\API\PatientRecentlyAdmissionController;
@@ -80,4 +81,8 @@ Route::middleware('auth:sanctum')
         Route::post('/admission-discharge-date', AdmissionDischargeDateController::class)
             ->middleware('ability:ward:admissions')
             ->name('api.admission-discharge-date');
+
+        Route::post('/itemize', ItemizeController::class)
+            ->middleware('ability:item:master')
+            ->name('api.itemize');
     });

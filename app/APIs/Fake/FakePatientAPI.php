@@ -5,7 +5,7 @@ namespace App\APIs\Fake;
 use App\Contracts\AdmissionAPI;
 use App\Contracts\PatientAPI;
 
-class FakePatientAPI implements PatientAPI, AdmissionAPI
+class FakePatientAPI implements AdmissionAPI, PatientAPI
 {
     public function getPatient(int $hn, bool $withSensitiveInfo): array
     {
