@@ -48,12 +48,12 @@ class ItemizeAPI
             if (isset($form['date_in'])) {
                 $result = Http::withToken($this->API_TOKEN)
                     ->retry(3, 200)
-                    ->get(config('itemize.service_url'.$category), $form)
+                    ->get(config('itemize.service_url').$category, $form)
                     ->json();
             } else {
                 $result = Http::withToken($this->API_TOKEN)
                     ->retry(3, 200)
-                    ->post(config('itemize.service_url'.$category), $form)
+                    ->post(config('itemize.service_url').$category, $form)
                     ->json();
             }
 
