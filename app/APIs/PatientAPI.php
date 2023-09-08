@@ -7,7 +7,7 @@ use App\Contracts\PatientAPI as PatientAPIContract;
 use App\Traits\CurlExecutable;
 use Illuminate\Support\Facades\Cache;
 
-class PatientAPI implements PatientAPIContract, AdmissionAPI
+class PatientAPI implements AdmissionAPI, PatientAPIContract
 {
     use CurlExecutable;
 
