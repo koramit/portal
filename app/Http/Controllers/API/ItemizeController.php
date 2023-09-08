@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Traits\ServiceAccessLoggable;
 use Illuminate\Http\Request;
 
-
 class ItemizeController extends Controller
 {
     use ServiceAccessLoggable;
