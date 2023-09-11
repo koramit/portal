@@ -31,7 +31,7 @@ class ItemizeAPI
 
             cache()->put($this->TOKEN_CACHE_KEY, $this->API_TOKEN, now()->addHour());
         } catch (Exception $e) {
-            Log::notice('get_item_master_api_token@'.$e->getMessage());
+            Log::error('get_item_master_api_token@'.$e->getMessage());
             $this->API_TOKEN = null;
         }
     }
@@ -58,7 +58,7 @@ class ItemizeAPI
             }
 
         } catch (Exception $e) {
-            Log::notice('get_'.$category.'_master_result@'.$e->getMessage());
+            Log::error('get_'.$category.'_master_result@'.$e->getMessage());
 
             return [
                 'ok' => false,
