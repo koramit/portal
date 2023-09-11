@@ -26,7 +26,7 @@ class COVID19VaccinationAPI implements Covid19VaccinationAPIContract
                 ->post(config('covid.vaccine_url'), ['cid' => (string) $cid])
                 ->json();
         } catch (Exception $e) {
-            Log::notice('get_vaccine_api@'.$e->getMessage());
+            Log::error('get_vaccine_api@'.$e->getMessage());
 
             return ['ok' => false, 'serverError' => false, 'message' => $e->getMessage()];
         }
