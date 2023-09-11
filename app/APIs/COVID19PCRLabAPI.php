@@ -41,7 +41,7 @@ class COVID19PCRLabAPI implements Covid19PCRLabAPIContract
 
             cache()->put($this->TOKEN_CACHE_KEY, $this->API_TOKEN, now()->addHour());
         } catch (Exception $e) {
-            Log::notice('get_covid_pcr_lab_api_token@'.$e->getMessage());
+            Log::error('get_covid_pcr_lab_api_token@'.$e->getMessage());
             $this->API_TOKEN = null;
         }
     }
@@ -63,7 +63,7 @@ class COVID19PCRLabAPI implements Covid19PCRLabAPIContract
                 ->post(config('covid.service_url'), $form)
                 ->json();
         } catch (Exception $e) {
-            Log::notice('get_covid_pcr_lab_result@'.$e->getMessage());
+            Log::error('get_covid_pcr_lab_result@'.$e->getMessage());
 
             return [
                 'ok' => false,
