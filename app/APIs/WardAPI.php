@@ -37,7 +37,6 @@ class WardAPI implements \App\Contracts\WardAPI
                     ];
                 })->toArray();
 
-
         return [
             'ok' => true,
             'found' => count($wards),
