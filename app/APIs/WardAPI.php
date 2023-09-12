@@ -10,22 +10,22 @@ class WardAPI implements \App\Contracts\WardAPI
 {
     public function getWard(int|string $number = null): array
     {
-        $wards = ($number === null)
+        $admissions = ($number === null)
             ? Ward::query()
                 ->select(['id', 'name'])
                 ->withCount(['admissions' => fn ($q) => $q->whereNull('discharged_at')])
                 ->having('admissions_count', '>', 0)
                 ->get()
                 ->transform(fn ($ward) => [
-                    'number' => $ward->id,
-                    'name' => $ward->name,
+                    'ward_number' => $ward->id,
+                    'ward_name' => $ward->name,
                     'admissions_count' => $ward->admissions_count,
                 ])->toArray()
             : Admission::query()
                 ->where('ward_id', $number)
                 ->whereNull('discharged_at')
                 ->get()
-                ->transform(function ($admission) {
+                ->transform(function (Admission $admission) {
                     return [
                         'an' => $admission->an,
                         'hn' => $admission->hn,
@@ -39,8 +39,8 @@ class WardAPI implements \App\Contracts\WardAPI
 
         return [
             'ok' => true,
-            'found' => count($wards),
-            'wards' => $wards,
+            'found' => (bool) count($admissions),
+            'admissions' => $admissions,
         ];
     }
 
@@ -58,8 +58,8 @@ class WardAPI implements \App\Contracts\WardAPI
                 ->get()
                 ->transform(function ($ward) {
                     return [
-                        'number' => $ward->id,
-                        'name' => $ward->name,
+                        'ward_number' => $ward->id,
+                        'ward_name' => $ward->name,
                         'admissions_count' => $ward->admissions_count,
                     ];
                 })->toArray()
@@ -84,7 +84,7 @@ class WardAPI implements \App\Contracts\WardAPI
 
         return [
             'ok' => true,
-            'found' => count($admissions),
+            'found' => (bool) count($admissions),
             'admissions' => $admissions,
         ];
     }
