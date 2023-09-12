@@ -10,8 +10,8 @@ class WardAPI implements \App\Contracts\WardAPI
 {
     public function getWard(int|string $number = null): array
     {
-        if ($number === null) {
-            return Ward::query()
+        $wards = ($number === null)
+            ? Ward::query()
                 ->select(['id', 'name'])
                 ->withCount(['admissions' => fn ($q) => $q->whereNull('discharged_at')])
                 ->having('admissions_count', '>', 0)
@@ -20,24 +20,29 @@ class WardAPI implements \App\Contracts\WardAPI
                     'number' => $ward->id,
                     'name' => $ward->name,
                     'admissions_count' => $ward->admissions_count,
-                ])->toArray();
-        }
+                ])->toArray()
+            : Admission::query()
+                ->where('ward_id', $number)
+                ->whereNull('discharged_at')
+                ->get()
+                ->transform(function ($admission) {
+                    return [
+                        'an' => $admission->an,
+                        'hn' => $admission->hn,
+                        'name' => $admission->name,
+                        'gender' => $admission->gender,
+                        'age' => $admission->age,
+                        'age_unit' => $admission->age_unit,
+                        'admitted_at' => $admission->admitted_at,
+                    ];
+                })->toArray();
 
-        return Admission::query()
-            ->where('ward_id', $number)
-            ->whereNull('discharged_at')
-            ->get()
-            ->transform(function ($admission) {
-                return [
-                    'an' => $admission->an,
-                    'hn' => $admission->hn,
-                    'name' => $admission->name,
-                    'gender' => $admission->gender,
-                    'age' => $admission->age,
-                    'age_unit' => $admission->age_unit,
-                    'admitted_at' => $admission->admitted_at,
-                ];
-            })->toArray();
+
+        return [
+            'ok' => true,
+            'found' => count($wards),
+            'wards' => $wards,
+        ];
     }
 
     public function getAdmissionDischargeDate(array $data): array
@@ -45,8 +50,8 @@ class WardAPI implements \App\Contracts\WardAPI
         $begin = Carbon::create($data['begin_date']);
         $end = Carbon::create($data['end_date'] ?? $begin->copy()->addDay());
 
-        if (! ($data['number'] ?? false)) {
-            return Ward::query()
+        $admissions = (! ($data['number'] ?? false))
+            ? Ward::query()
                 ->select(['id', 'name'])
                 ->withCount([
                     'admissions' => fn ($query) => $query->whereBetween('discharged_at', [$begin, $end]),
@@ -58,26 +63,30 @@ class WardAPI implements \App\Contracts\WardAPI
                         'name' => $ward->name,
                         'admissions_count' => $ward->admissions_count,
                     ];
+                })->toArray()
+            : Admission::query()
+                ->where('ward_id', $data['number'])
+                ->whereBetween('discharged_at', [$begin, $end])
+                ->get()
+                ->transform(function ($admission) {
+                    return [
+                        'an' => $admission->an,
+                        'hn' => $admission->hn,
+                        'name' => $admission->name,
+                        'gender' => $admission->gender,
+                        'age' => $admission->age,
+                        'age_unit' => $admission->age_unit,
+                        'discharge_status' => $admission->discharge_status_name,
+                        'discharge_type' => $admission->discharge_type_name,
+                        'admitted_at' => $admission->admitted_at,
+                        'discharged_at' => $admission->discharged_at,
+                    ];
                 })->toArray();
-        }
 
-        return Admission::query()
-            ->where('ward_id', $data['number'])
-            ->whereBetween('discharged_at', [$begin, $end])
-            ->get()
-            ->transform(function ($admission) {
-                return [
-                    'an' => $admission->an,
-                    'hn' => $admission->hn,
-                    'name' => $admission->name,
-                    'gender' => $admission->gender,
-                    'age' => $admission->age,
-                    'age_unit' => $admission->age_unit,
-                    'discharge_status' => $admission->discharge_status_name,
-                    'discharge_type' => $admission->discharge_type_name,
-                    'admitted_at' => $admission->admitted_at,
-                    'discharged_at' => $admission->discharged_at,
-                ];
-            })->toArray();
+        return [
+            'ok' => true,
+            'found' => count($admissions),
+            'admissions' => $admissions,
+        ];
     }
 }
