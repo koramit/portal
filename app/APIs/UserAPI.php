@@ -181,7 +181,7 @@ class UserAPI implements UserAPIContract
             return [
                 'ok' => false,
                 'found' => false,
-                'message' => 'something went wrong',
+                'message' => 'something went wrong with status code '.$response->status(),
             ];
         }
 
