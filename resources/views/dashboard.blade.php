@@ -89,87 +89,90 @@
             </div>
         </form>
         <div class="relative overflow-x-auto">
-                <table class="w-full text-sm text-left text-slate-500">
-                    <thead class="text-xs text-slate-700 uppercase bg-slate-50">
-                    <tr>
+            <table class="w-full text-sm text-left text-slate-500">
+                <thead class="text-xs text-slate-700 uppercase bg-slate-50">
+                <tr>
+                    <th scope="col" class="px-6 py-3">
+                        Name
+                    </th>
+                    @if(Auth::user()->can('revoke_any_tokens'))
                         <th scope="col" class="px-6 py-3">
-                            Name
+                            Developer
                         </th>
+                    @endif
+                    <th scope="col" class="px-6 py-3">
+                        Abilities
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Status
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Calls
+                    </th>
+                    <th scope="col" colspan="2" class="px-6 py-3">
+                        Last used
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                @forelse($appTokens as $token)
+                    <tr class="bg-white border-b">
+                        <td class="px-6 py-3">
+                            {{ $token->name }}
+                        </td>
                         @if(Auth::user()->can('revoke_any_tokens'))
-                            <th scope="col" class="px-6 py-3">
-                                Developer
-                            </th>
+                            <td class="px-6 py-3">
+                                {{ $token->tokenable->full_name }}
+                            </td>
                         @endif
-                        <th scope="col" class="px-6 py-3">
-                            Abilities
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Status
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Calls
-                        </th>
-                        <th scope="col" colspan="2" class="px-6 py-3">
-                            Last used
-                        </th>
+                        <td class="px-6 py-3">
+                            @foreach($token->abilities as $ability)
+                                <span class="inline-block bg-slate-100 text-slate-500 rounded-full px-2 py-1 text-xs font-semibold mr-2 mb-2">
+                                    {{ $tokenAbilityLabelMapping[$ability] }}
+                                </span>
+                            @endforeach
+                        </td>
+                        <td class="px-6 py-3">
+                            <span @class([
+                                'inline-block rounded-full px-2 py-1 text-xs font-semibold mr-2 mb-2',
+                                'bg-teal-100 text-teal-500' => $token->status === 'active',
+                                'bg-slate-100 text-slate-500' => $token->status === 'expired',
+                                'bg-amber-100 text-amber-500' => $token->status === 'revoked',
+                            ])>{{ $token->status }}</span>
+                        </td>
+                        <td class="px-6 py-3">
+                            {{ $token->service_access_logs_count }}
+                        </td>
+                        <td class="px-6 py-3">
+                            {{ $token->last_used_at }}
+                        </td>
+                        <td class="px-6 py-3">
+                            @can('destroy', $token)
+                            <form
+                                method="POST"
+                                action="{{ route('app-tokens.destroy', $token->hashed_key) }}"
+                            >
+                                @csrf
+                                @method('DELETE')
+                                <button
+                                    class="text-sm text-red-500 hover:text-red-700"
+                                    type="submit"
+                                >Revoke</button>
+                            </form>
+                            @endcan
+                        </td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    @forelse($appTokens as $token)
-                        <tr class="bg-white border-b">
-                            <td class="px-6 py-3">
-                                {{ $token->name }}
-                            </td>
-                            @if(Auth::user()->can('revoke_any_tokens'))
-                                <td class="px-6 py-3">
-                                    {{ $token->tokenable->full_name }}
-                                </td>
-                            @endif
-                            <td class="px-6 py-3">
-                                @foreach($token->abilities as $ability)
-                                    <span class="inline-block bg-slate-100 text-slate-500 rounded-full px-2 py-1 text-xs font-semibold mr-2 mb-2">
-                                        {{ $tokenAbilityLabelMapping[$ability] }}
-                                    </span>
-                                @endforeach
-                            </td>
-                            <td class="px-6 py-3">
-                                <span @class([
-                                    'inline-block rounded-full px-2 py-1 text-xs font-semibold mr-2 mb-2',
-                                    'bg-teal-100 text-teal-500' => $token->status === 'active',
-                                    'bg-slate-100 text-slate-500' => $token->status === 'expired',
-                                    'bg-amber-100 text-amber-500' => $token->status === 'revoked',
-                                ])>{{ $token->status }}</span>
-                            </td>
-                            <td class="px-6 py-3">
-                                {{ $token->service_access_logs_count }}
-                            </td>
-                            <td class="px-6 py-3">
-                                {{ $token->last_used_at }}
-                            </td>
-                            <td class="px-6 py-3">
-                                @can('destroy', $token)
-                                <form
-                                    method="POST"
-                                    action="{{ route('app-tokens.destroy', $token->hashed_key) }}"
-                                >
-                                    @csrf
-                                    @method('DELETE')
-                                    <button
-                                        class="text-sm text-red-500 hover:text-red-700"
-                                        type="submit"
-                                    >Revoke</button>
-                                </form>
-                                @endcan
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4" class="px-6 py-3 text-center">No data</td>
-                        </tr>
-                    @endforelse
-                    </tbody>
-                </table>
-            </div>
+                @empty
+                    <tr>
+                        <td colspan="4" class="px-6 py-3 text-center">No data</td>
+                    </tr>
+                @endforelse
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-6">
+            {{ $appTokens->links() }}
+        </div>
         @endcan
     </main>
 @endsection
