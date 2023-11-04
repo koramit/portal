@@ -16,7 +16,8 @@ class DashboardController extends Controller
             ->when($user->cannot('revoke_any_tokens'), fn ($query) => $query->where('tokenable_id', $user->id))
             ->when($user->can('revoke_any_tokens'), fn ($query) => $query->with('tokenable'))
             ->withCount('serviceAccessLogs')
-            ->paginate();
+            ->latest()
+            ->paginate(10);
 
         return view('dashboard')->with([
             'title' => 'Dashboard',
