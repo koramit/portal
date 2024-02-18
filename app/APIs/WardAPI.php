@@ -19,6 +19,8 @@ class WardAPI implements \App\Contracts\WardAPI
                 ->transform(fn ($ward) => [
                     'ward_number' => $ward->id,
                     'ward_name' => $ward->name,
+                    'ward_name_short' => $ward->name_short,
+                    'ward_ref_id' => $ward->number,
                     'admissions_count' => $ward->admissions_count,
                 ])->toArray()
             : Admission::query()
@@ -60,6 +62,8 @@ class WardAPI implements \App\Contracts\WardAPI
                     return [
                         'ward_number' => $ward->id,
                         'ward_name' => $ward->name,
+                        'ward_name_short' => $ward->name_short,
+                        'ward_ref_id' => $ward->number,
                         'admissions_count' => $ward->admissions_count,
                     ];
                 })->toArray()
