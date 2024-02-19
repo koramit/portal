@@ -12,7 +12,7 @@ class WardAPI implements \App\Contracts\WardAPI
     {
         $admissions = ($number === null)
             ? Ward::query()
-                ->select(['id', 'name'])
+                ->select(['id', 'name', 'name_short', 'number'])
                 ->withCount(['admissions' => fn ($q) => $q->whereNull('discharged_at')])
                 ->having('admissions_count', '>', 0)
                 ->get()
@@ -53,7 +53,7 @@ class WardAPI implements \App\Contracts\WardAPI
 
         $admissions = (! ($data['number'] ?? false))
             ? Ward::query()
-                ->select(['id', 'name'])
+                ->select(['id', 'name', 'name_short', 'number'])
                 ->withCount([
                     'admissions' => fn ($query) => $query->whereBetween('discharged_at', [$begin, $end]),
                 ])->having('admissions_count', '>', 0)
