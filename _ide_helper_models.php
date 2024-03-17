@@ -1,6 +1,7 @@
 <?php
 
 // @formatter:off
+// phpcs:ignoreFile
 /**
  * A helper file for your Eloquent Models
  * Copy the phpDocs from this file to the correct Model,
@@ -12,7 +13,7 @@
 
 namespace App\Models{
 /**
- * App\Models\Ability
+ * 
  *
  * @property int $id
  * @property string $name
@@ -35,7 +36,7 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\PersonalAccessToken
+ * 
  *
  * @property int $id
  * @property int $tokenable_type
@@ -50,6 +51,7 @@ namespace App\Models{
  * @property int|null $revoker_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read mixed $hashed_key
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ServiceAccessLog> $serviceAccessLogs
  * @property-read int|null $service_access_logs_count
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $tokenable
@@ -77,14 +79,16 @@ namespace App\Models{
 
 namespace App\Models\Resources{
 /**
- * App\Models\Resources\Admission
+ * 
  *
+ * @property string|null $age_unit
+ * @property int|null $age
  * @property int $id
  * @property int $an
  * @property int $hn
  * @property string $name
  * @property \Illuminate\Support\Carbon|null $dob
- * @property int $gender
+ * @property-read int $gender
  * @property string|null $discharge_type_name
  * @property string|null $discharge_status_name
  * @property \Illuminate\Support\Carbon|null $admitted_at
@@ -121,7 +125,7 @@ namespace App\Models\Resources{
 
 namespace App\Models\Resources{
 /**
- * App\Models\Resources\AdmissionCall
+ * 
  *
  * @property int $id
  * @property int $an
@@ -144,7 +148,7 @@ namespace App\Models\Resources{
 
 namespace App\Models\Resources{
 /**
- * App\Models\Resources\AdmissionTransfer
+ * 
  *
  * @property int $id
  * @property int $admission_id
@@ -167,7 +171,7 @@ namespace App\Models\Resources{
 
 namespace App\Models\Resources{
 /**
- * App\Models\Resources\AttendingStaff
+ * 
  *
  * @property int $id
  * @property string $name
@@ -188,7 +192,7 @@ namespace App\Models\Resources{
 
 namespace App\Models\Resources{
 /**
- * App\Models\Resources\Ward
+ * 
  *
  * @property int $id
  * @property string $name
@@ -213,7 +217,7 @@ namespace App\Models\Resources{
 
 namespace App\Models{
 /**
- * App\Models\Role
+ * 
  *
  * @property int $id
  * @property string $name
@@ -238,7 +242,7 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\ServiceAccessLog
+ * 
  *
  * @property int $id
  * @property int $personal_access_token_id
@@ -264,17 +268,18 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\ServiceRequestForm
+ * 
  *
  * @property int $id
  * @property int $requester_id
- * @property \Illuminate\Database\Eloquent\Casts\AsCollection $form
+ * @property \Illuminate\Support\Collection $form
  * @property int|null $authority_id
  * @property int|null $revoke_authority_id
  * @property int $status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\User|null $authority
+ * @property-read mixed $hashed_key
  * @property-read \App\Models\User|null $requester
  * @property-read \App\Models\User|null $revokeAuthority
  * @method static \Illuminate\Database\Eloquent\Builder|ServiceRequestForm findByUnhashKey(string $hashed, ?string $field = 'id')
@@ -295,7 +300,7 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\User
+ * 
  *
  * @property int $id
  * @property string $name
@@ -306,8 +311,14 @@ namespace App\Models{
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read mixed $abilities
+ * @property-read mixed $abilities_id
+ * @property-read mixed $hashed_key
+ * @property-read mixed $line_notify_enabled
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
+ * @property-read mixed $role_labels
+ * @property-read mixed $role_names
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Role> $roles
  * @property-read int|null $roles_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PersonalAccessToken> $tokens
