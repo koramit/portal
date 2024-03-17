@@ -187,7 +187,7 @@ class UserAPI implements UserAPIContract
 
         $response = $response->json();
 
-        if ($response === "") {
+        if ($response === '') {
             return [
                 'ok' => true,
                 'found' => false,

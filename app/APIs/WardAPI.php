@@ -8,7 +8,7 @@ use Illuminate\Support\Carbon;
 
 class WardAPI implements \App\Contracts\WardAPI
 {
-    public function getWard(int|string $number = null): array
+    public function getWard(int|string|null $number = null): array
     {
         $admissions = ($number === null)
             ? Ward::query()

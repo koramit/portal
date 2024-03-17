@@ -45,12 +45,12 @@ class Admission extends Model
                     return null;
                 }
 
-                $ageInMonths = $this->admitted_at->diffInMonths($this->dob);
+                $ageInMonths = (int) abs($this->admitted_at->diffInMonths($this->dob));
                 if ($ageInMonths < 12) {
                     return $ageInMonths;
                 }
 
-                return $this->admitted_at->diffInYears($this->dob);
+                return (int) abs($this->admitted_at->diffInYears($this->dob));
             },
         );
     }
@@ -63,7 +63,7 @@ class Admission extends Model
                     return null;
                 }
 
-                $ageInMonths = $this->admitted_at->diffInMonths($this->dob);
+                $ageInMonths = (int) abs($this->admitted_at->diffInMonths($this->dob));
                 if ($ageInMonths < 12) {
                     return 'Mo';
                 }
