@@ -62,9 +62,10 @@ return [
     'middleware' => [
         'verify_csrf_token' => App\Http\Middleware\VerifyCsrfToken::class,
         'encrypt_cookies' => App\Http\Middleware\EncryptCookies::class,
+        'validate_csrf_token' => Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
     ],
 
     // custom config starts here
-    'expiration_days' => env('TOKEN_EXPIRATION_DAYS', 60),
+    'expiration_days' => (int) env('TOKEN_EXPIRATION_DAYS', 60),
     'failed_attempts_per_minute' => env('FAILED_ATTEMPTS_PER_MINUTE', 5),
 ];
