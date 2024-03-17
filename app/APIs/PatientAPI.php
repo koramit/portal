@@ -89,7 +89,9 @@ class PatientAPI implements AdmissionAPI, PatientAPIContract
             return $patient;
         }
 
-        $patient['age'] = $patient['dob'] ? now()->diffInYears($patient['dob']) : null;
+        $patient['age'] = $patient['dob']
+            ? (int) abs(now()->diffInYears($patient['dob']))
+            : null;
         $patient['dob'] = null;
         $patient['document_id'] = null;
         $patient['race'] = null;
