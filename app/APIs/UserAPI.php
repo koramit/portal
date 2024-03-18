@@ -121,6 +121,10 @@ class UserAPI implements UserAPIContract
             return $data;
         }
 
+        if ($url === config('siad.auth_user_url') && in_array($response->status(), [404, 500])) {
+            return $this->altAuthenticate($data['name'], $data['pwd']);
+        }
+
         // @TODO not success has variant SHOULD cover all cases ie, response body is empty
         return [
             'ok' => false,
