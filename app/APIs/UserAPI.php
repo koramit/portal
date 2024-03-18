@@ -63,7 +63,7 @@ class UserAPI implements UserAPIContract
         ];
         $response = $this->makePost(config('siad.auth_user_url'), ['name' => $login, 'pwd' => $password], $headers);
 
-        if (! $response['ok'] || ! $response['found']) {
+        if (! $response['ok'] || ! $response['found'] || $response['alt']) {
             return $response;
         }
 
@@ -221,44 +221,55 @@ class UserAPI implements UserAPIContract
             'password' => $password,
         ]);
 
-        if ($response->status() === 200) {
-            $userData = [];
-            $userData['login'] = $login;
-            $token = $response->json()['access_token'];
+        $authenticated = $response->status() === 200
+            || ($response->status() === 400 && ($response->json()['message'] ?? null) === 'ท่านไม่มีสิทธิ์ใช้งานระบบ');
 
-            $response = Http::acceptJson()
-                ->withToken($token)
-                ->get(config('siad.alt_user_info_url'));
-
-            if ($response->status() !== 200) {
-                return $userData;
-            }
-
-            $u1 = $response->json();
-            $userData['org_id'] = $u1['sub'];
-            $userData['full_name'] = $u1['unique_name'];
-            $userData['email'] = $u1['email'];
-
-            $response = Http::acceptJson()
-                ->post(config('siad.alt_user_org_id_url'), ['employeeID' => $userData['org_id']]);
-
-            if ($response->status() !== 200) {
-                return $userData;
-            }
-
-            $u2 = $response->json();
-            $userData['password_expires_in_days'] = $u2['pwdExpiryDay'];
-            $userData['ok'] = true;
-            $userData['found'] = true;
-
-            return $userData;
-        } elseif ($response->status() === 400) {
+        if (! $authenticated) {
             return [
                 'ok' => true,
                 'found' => false,
                 'message' => 'not found',
             ];
         }
+
+        if ($response->status() === 400) { // unauthorized on ALT service
+            return [
+                'ok' => true,
+                'found' => true,
+                'alt' => true,
+                'login' => $login,
+            ];
+        }
+
+        $userData = [];
+        $userData['login'] = $login;
+        $token = $response->json()['access_token'];
+
+        $response = Http::acceptJson()
+            ->withToken($token)
+            ->get(config('siad.alt_user_info_url'));
+
+        if ($response->status() !== 200) {
+            return $userData;
+        }
+
+        $u1 = $response->json();
+        $userData['org_id'] = $u1['sub'];
+        $userData['full_name'] = $u1['unique_name'];
+        $userData['email'] = $u1['email'];
+
+        $response = Http::acceptJson()
+            ->post(config('siad.alt_user_org_id_url'), ['employeeID' => $userData['org_id']]);
+
+        if ($response->status() !== 200) {
+            return $userData;
+        }
+
+        $u2 = $response->json();
+        $userData['password_expires_in_days'] = $u2['pwdExpiryDay'];
+        $userData['ok'] = true;
+        $userData['found'] = true;
+        $userData['alt'] = true;
 
         return $userData;
     }
