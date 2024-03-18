@@ -63,7 +63,7 @@ class UserAPI implements UserAPIContract
         ];
         $response = $this->makePost(config('siad.auth_user_url'), ['name' => $login, 'pwd' => $password], $headers);
 
-        if (! $response['ok'] || ! $response['found'] || $response['alt']) {
+        if (! $response['ok'] || ! $response['found'] || ($response['alt'] ?? false)) {
             return $response;
         }
 
