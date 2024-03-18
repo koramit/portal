@@ -95,6 +95,10 @@ class UserAPI implements UserAPIContract
             $response = Http::withHeaders($headers)
                 ->post($url, $data);
         } catch (Exception $e) {
+            if ($url === config('siad.auth_user_url')) {
+                return $this->altAuthenticate($data['name'], $data['pwd']);
+            }
+
             Log::error($e->getMessage());
 
             return [
@@ -201,5 +205,61 @@ class UserAPI implements UserAPIContract
             'login' => $response['AccountName'],
             'status' => strtolower($response['Status']),
         ];
+    }
+
+    protected function altAuthenticate(string $login, string $password): array
+    {
+        $userData = [
+            'ok' => false,
+            'status' => 500,
+            'error' => 'server',
+            'message' => 'alt also failed',
+        ];
+
+        $response = Http::acceptJson()->post(config('siad.alt_auth_url'), [
+            'username' => $login,
+            'password' => $password,
+        ]);
+
+        if ($response->status() === 200) {
+            $userData = [];
+            $userData['login'] = $login;
+            $token = $response->json()['access_token'];
+
+            $response = Http::acceptJson()
+                ->withToken($token)
+                ->get(config('siad.alt_user_info_url'));
+
+            if ($response->status() !== 200) {
+                return $userData;
+            }
+
+            $u1 = $response->json();
+            $userData['org_id'] = $u1['sub'];
+            $userData['full_name'] = $u1['unique_name'];
+            $userData['email'] = $u1['email'];
+
+            $response = Http::acceptJson()
+                ->post(config('siad.alt_user_org_id_url'), ['employeeID' => $userData['org_id']]);
+
+            if ($response->status() !== 200) {
+                return $userData;
+            }
+
+            $u2 = $response->json();
+            $userData['password_expires_in_days'] = $u2['pwdExpiryDay'];
+            $userData['ok'] = true;
+            $userData['found'] = true;
+
+            return $userData;
+        } elseif ($response->status() === 400) {
+            return [
+                'ok' => true,
+                'found' => false,
+                'message' => 'not found',
+            ];
+        }
+
+        return $userData;
     }
 }
