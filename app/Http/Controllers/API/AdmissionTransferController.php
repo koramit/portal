@@ -27,14 +27,14 @@ class AdmissionTransferController extends Controller
                             ->select('name')
                             ->whereColumn('id', 'admission_transfers.ward_id'),
                     ])->addSelect([
-                            'ward_ref_id' => Ward::query()
-                                ->select('number')
-                                ->whereColumn('id', 'admission_transfers.ward_id'),
-                        ])->addSelect([
-                            'attending_staff_name' => AttendingStaff::query()
-                                ->select('name')
-                                ->whereColumn('id', 'admission_transfers.attending_staff_id'),
-                        ])->oldest(),
+                        'ward_ref_id' => Ward::query()
+                            ->select('number')
+                            ->whereColumn('id', 'admission_transfers.ward_id'),
+                    ])->addSelect([
+                        'attending_staff_name' => AttendingStaff::query()
+                            ->select('name')
+                            ->whereColumn('id', 'admission_transfers.attending_staff_id'),
+                    ])->oldest(),
             ])
             ->where('an', $validated['an'])
             ->first();
