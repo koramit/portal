@@ -19,6 +19,7 @@ class RoleUserService
         ['label' => 'Service without rate limit', 'name' => 'dev_ops'],
         ['label' => 'Ward data', 'name' => 'ward_developer'],
         ['label' => 'Item master', 'name' => 'itemize_developer'],
+        ['label' => 'Lab', 'name' => 'lab_developer'],
     ];
 
     const FORM_RULES = [
@@ -32,6 +33,7 @@ class RoleUserService
         'note' => ['required', 'string', 'min:128', 'max:1024'],
         'ward_developer' => ['sometimes', 'accepted'],
         'itemize_developer' => ['sometimes', 'accepted'],
+        'lab_developer' => ['sometimes', 'accepted'],
     ];
 
     const TOKEN_ABILITIES = [
@@ -48,6 +50,8 @@ class RoleUserService
         ['ability' => 'rate-limit:none', 'name' => 'rate_limit_none', 'label' => 'No rate limit', 'can' => 'create_no_rate_limit_app'],
         ['ability' => 'ward:admissions', 'name' => 'ward_admissions', 'label' => 'Ward data', 'can' => 'create_ward_app'],
         ['ability' => 'item:master', 'name' => 'item_master', 'label' => 'Item master', 'can' => 'create_itemize_app'],
+        ['ability' => 'lab:pending', 'name' => 'lab_pending', 'label' => 'Lab pending', 'can' => 'create_lab_app'],
+        ['ability' => 'lab:results', 'name' => 'lab_results', 'label' => 'Lab results', 'can' => 'create_lab_app'],
     ];
 
     public function attachRoles(ServiceRequestForm $form): void
