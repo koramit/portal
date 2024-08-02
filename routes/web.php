@@ -92,3 +92,21 @@ Route::delete('/app-tokens/{token}', [PersonalAccessTokenController::class, 'des
 // init root
 Route::get('/init-root/{code}', InitRootController::class)
     ->middleware(['auth']);
+
+Route::post('/lab-pending', \App\Http\Controllers\API\LabPendingReportController::class)
+    ->name('api.lab-pending');
+
+Route::post('/lab-recently', \App\Http\Controllers\API\LabRecentlyOrderController::class)
+    ->name('api.lab-recently');
+
+Route::post('/lab-from-ref-no', [\App\Http\Controllers\API\LabResultController::class, 'fromRefNo'])
+    ->name('api.lab-from-ref-no');
+
+Route::post('/lab-from-service-id', [\App\Http\Controllers\API\LabResultController::class, 'fromServiceId'])
+    ->name('api.lab-from-service-id');
+
+Route::post('/lab-from-item-code', [\App\Http\Controllers\API\LabResultController::class, 'fromItemCode'])
+    ->name('api.lab-from-item-code');
+
+Route::post('/lab-from-item-all', [\App\Http\Controllers\API\LabResultController::class, 'fromItemCodeAllResult'])
+    ->name('api.lab-from-item-all');
