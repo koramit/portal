@@ -205,7 +205,7 @@ class LabAPI implements LabAPIContract
             $result = Http::withToken($this->API_TOKEN)
                 ->withOptions(['verify' => false])
                 ->retry(3, 200)
-                ->get(config('si_lis.service_url').'/Items', $form)
+                ->get(config('si_lis.service_url').'/reports/Items', $form)
                 ->json();
         } catch (Exception $e) {
             Log::error('recently-reports@'.$e->getMessage());
