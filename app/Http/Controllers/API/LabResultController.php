@@ -17,12 +17,12 @@ class LabResultController
         ]);
 
         $data = $api->getLabFromRefNo($validated['ref_no']);
-        $this->log(
+        /*$this->log(
             $request->bearerToken(),
             $validated,
             $request->route()->getName(),
             $data['found'] ?? false,
-        );
+        );*/
 
         return $data;
     }
@@ -38,12 +38,12 @@ class LabResultController
         ]);
 
         $data = $api->getLabFromServiceId($validated);
-        $this->log(
+        /*$this->log(
             $request->bearerToken(),
             $validated,
             $request->route()->getName(),
             $data['found'] ?? false,
-        );
+        );*/
 
         return $data;
     }
@@ -58,12 +58,12 @@ class LabResultController
         ]);
 
         $data = $api->getLabFromItemCode($validated);
-        $this->log(
+        /*$this->log(
             $request->bearerToken(),
             $validated,
             $request->route()->getName(),
             $data['found'] ?? false,
-        );
+        );*/
 
         return $data;
     }
@@ -76,12 +76,12 @@ class LabResultController
         ]);
 
         $data = $api->getLabFromItemCodeAllResults($validated);
-        $this->log(
+        /*$this->log(
             $request->bearerToken(),
             $validated,
             $request->route()->getName(),
             $data['found'] ?? false,
-        );
+        );*/
 
         return $data;
     }

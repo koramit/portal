@@ -17,12 +17,12 @@ class LabRecentlyOrderController
         ]);
 
         $data = $api->getLabRecentlyOrders($validated['hn']);
-        $this->log(
+        /*$this->log(
             $request->bearerToken(),
             $validated,
             $request->route()->getName(),
             $data['found'] ?? false,
-        );
+        );*/
 
         return $data;
     }
