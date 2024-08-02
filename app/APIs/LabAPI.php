@@ -140,7 +140,7 @@ class LabAPI implements LabAPIContract
         $form = [
             'HN' => $validated['hn'],
             'GROUP_SERVICE_ID' => $validated['service_ids'],
-            'GROUP' => $validated['latest'] ?? false,
+            'GROUP' => !($validated['latest'] ?? true),
         ];
         if (isset($validated['date_start']) && isset($validated['date_end'])) {
             $form['START_DATE'] = $validated['date_start'];
