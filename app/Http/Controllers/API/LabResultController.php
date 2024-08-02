@@ -13,7 +13,7 @@ class LabResultController
     public function fromRefNo(Request $request, LabAPI $api)
     {
         $validated = $request->validate([
-            'ref_no' => ['required_if'],
+            'ref_no' => ['required', 'string'],
         ]);
 
         $data = $api->getLabFromRefNo($validated['ref_no']);
