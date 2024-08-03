@@ -158,6 +158,7 @@ class LabAPI implements LabAPIContract
             'ok' => true,
             'found' => true,
             'reports' => collect($result)->map(fn ($item) => [
+                'lab_no' => $item['LAB_NO'],
                 'service_id' => $item['SERV_ID'],
                 'service_name' => $item['SERV_DESC'],
                 'datetime_order' => $item['ORDER_DATE'] . ' ' . $item['ORDER_TIME'],
