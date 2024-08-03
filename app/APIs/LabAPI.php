@@ -55,18 +55,28 @@ class LabAPI implements LabAPIContract
             ];
         }
 
-        $pendingReports = collect($result['result'])->filter(fn ($item) => ! $item['REPORT'])
-            ->map(fn ($item) => [
+        $pendingReports = [];
+        $recentlyReports = [];
+        foreach ($result['result'] as $item) {
+            $temp = [
+                'lab_no' => $item['LAB_NO'],
                 'ref_no' => $item['REF_NO'],
                 'service_name' => $item['SERV_DESC'],
                 'datetime_order' => $item['ORDER_DATE'] . ' ' . $item['ORDER_TIME'],
-            ])->values()->all();
+            ];
+            if ($item['REPORT']) {
+                $recentlyReports[] = $temp;
+            } else {
+                $pendingReports[] = $temp;
+            }
+        }
 
         return [
             'ok' => true,
             'found' => true,
             'status' => $result['status'],
             'pending_reports' => $pendingReports,
+            'recently_reports' => $recentlyReports,
         ];
     }
 
