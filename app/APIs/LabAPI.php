@@ -92,6 +92,7 @@ class LabAPI implements LabAPIContract
         }
 
         $orders = collect($result)->map(fn ($item) => [
+                'lab_no' => $item['LAB_NO'],
                 'ref_no' => $item['REF_NO'],
                 'service_id' => $item['SERV_ID'],
                 'service_name' => $item['SERV_DESC'],
