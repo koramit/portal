@@ -103,7 +103,7 @@ class LabAPI implements LabAPIContract
 
         return [
             'ok' => true,
-            'found' => count($orders),
+            'found' => (boolean) count($orders),
             'recently_orders' => $orders,
         ];
     }
