@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Contracts\AdmissionAPI;
 use App\Contracts\COVID19PCRLabAPI;
 use App\Contracts\COVID19VaccinationAPI;
+use App\Contracts\LabAPI;
 use App\Contracts\PatientAPI;
 use App\Contracts\UserAPI;
 use App\Models\PersonalAccessToken;
@@ -36,6 +37,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(COVID19VaccinationAPI::class, config('app.covid19_vaccination_provider'));
 
         $this->app->bind(COVID19PCRLabAPI::class, config('app.covid19_pcr_lab_provider'));
+
+        $this->app->bind(LabAPI::class, config('app.lab_provider'));
     }
 
     /**

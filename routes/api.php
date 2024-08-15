@@ -8,6 +8,9 @@ use App\Http\Controllers\API\COVID19PCRLabController;
 use App\Http\Controllers\API\COVID19VaccinationController;
 use App\Http\Controllers\API\GetUserController;
 use App\Http\Controllers\API\ItemizeController;
+use App\Http\Controllers\API\LabPendingReportController;
+use App\Http\Controllers\API\LabRecentlyOrderController;
+use App\Http\Controllers\API\LabResultController;
 use App\Http\Controllers\API\PatientAdmissionController;
 use App\Http\Controllers\API\PatientController;
 use App\Http\Controllers\API\PatientRecentlyAdmissionController;
@@ -90,4 +93,28 @@ Route::middleware('auth:sanctum')
         Route::post('/itemize', ItemizeController::class)
             ->middleware('ability:item:master')
             ->name('api.itemize');
+
+        Route::post('/lab-pending', LabPendingReportController::class)
+            ->middleware('ability:lab:pending')
+            ->name('api.lab-pending');
+
+        Route::post('/lab-recently', LabRecentlyOrderController::class)
+            ->middleware('ability:lab:results')
+            ->name('api.lab-recently');
+
+        Route::post('/lab-from-ref-no', [LabResultController::class, 'fromRefNo'])
+            ->middleware('ability:lab:results')
+            ->name('api.lab-from-ref-no');
+
+        Route::post('/lab-from-service-id', [LabResultController::class, 'fromServiceId'])
+            ->middleware('ability:lab:results')
+            ->name('api.lab-from-service-id');
+
+        Route::post('/lab-from-item-code', [LabResultController::class, 'fromItemCode'])
+            ->middleware('ability:lab:results')
+            ->name('api.lab-from-item-code');
+
+        Route::post('/lab-from-item-all', [LabResultController::class, 'fromItemCodeAllResult'])
+            ->middleware('ability:lab:results')
+            ->name('api.lab-from-item-all');
     });
