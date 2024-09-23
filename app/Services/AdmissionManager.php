@@ -38,7 +38,7 @@ class AdmissionManager
         }
 
         // create
-        $admission = new Admission();
+        $admission = new Admission;
         $admission->hn = $data['hn'];
         $admission->an = $data['an'];
         $admission->name = $data['patient_name'];

@@ -38,8 +38,8 @@ class BuildAdmissionList extends Command
     {
         $ans = $this->getList();
 
-        $api = new PatientAPI();
-        $manager = new AdmissionManager();
+        $api = new PatientAPI;
+        $manager = new AdmissionManager;
         $founds = collect();
         /** @var PersonalAccessToken $token */
         $token = User::query()

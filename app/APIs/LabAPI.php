@@ -62,7 +62,7 @@ class LabAPI implements LabAPIContract
                 'lab_no' => $item['LAB_NO'],
                 'ref_no' => $item['REF_NO'],
                 'service_name' => $item['SERV_DESC'],
-                'datetime_order' => $item['ORDER_DATE'] . ' ' . $item['ORDER_TIME'],
+                'datetime_order' => $item['ORDER_DATE'].' '.$item['ORDER_TIME'],
             ];
             if ($item['REPORT']) {
                 $recentlyReports[] = $temp;
@@ -102,19 +102,19 @@ class LabAPI implements LabAPIContract
         }
 
         $orders = collect($result)->map(fn ($item) => [
-                'lab_no' => $item['LAB_NO'],
-                'ref_no' => $item['REF_NO'],
-                'service_id' => $item['SERV_ID'],
-                'service_name' => $item['SERV_DESC'],
-                'datetime_order' => $item['ORDER_DATE'] . ' ' . $item['ORDER_TIME'],
-                'datetime_report' => $item['REPORT_DATE'] && $item['REPORT_TIME']
-                    ? $item['REPORT_DATE'] . ' ' . $item['REPORT_TIME']
-                    : null,
-            ])->values()->all();
+            'lab_no' => $item['LAB_NO'],
+            'ref_no' => $item['REF_NO'],
+            'service_id' => $item['SERV_ID'],
+            'service_name' => $item['SERV_DESC'],
+            'datetime_order' => $item['ORDER_DATE'].' '.$item['ORDER_TIME'],
+            'datetime_report' => $item['REPORT_DATE'] && $item['REPORT_TIME']
+                ? $item['REPORT_DATE'].' '.$item['REPORT_TIME']
+                : null,
+        ])->values()->all();
 
         return [
             'ok' => true,
-            'found' => (boolean) count($orders),
+            'found' => (bool) count($orders),
             'recently_orders' => $orders,
         ];
     }
@@ -133,16 +133,16 @@ class LabAPI implements LabAPIContract
             'report' => [
                 'service_id' => $result['SERV_ID'],
                 'service_name' => $result['SERV_DESC'],
-                'datetime_order' => $result['ORDER_DATE'] . ' ' . $result['ORDER_TIME'],
-                'datetime_specimen_received' => $result['SPECIMEN_RECEIVED'] . ' ' . $result['SPECIMEN_RECEIVED_TIME'],
+                'datetime_order' => $result['ORDER_DATE'].' '.$result['ORDER_TIME'],
+                'datetime_specimen_received' => $result['SPECIMEN_RECEIVED'].' '.$result['SPECIMEN_RECEIVED_TIME'],
                 'datetime_report' => $result['REPORT_DATE'] && $result['REPORT_TIME']
-                    ? $result['REPORT_DATE'] . ' ' . $result['REPORT_TIME']
+                    ? $result['REPORT_DATE'].' '.$result['REPORT_TIME']
                     : null,
                 'requester_id' => $result['REQUESTOR_ID'],
                 'requester' => $result['REQUESTOR'],
                 'note' => $result['NOTE'],
-                'results' => collect($result['RESULT'])->map(fn ($item) => $this->labItemCast($item))->values()->all()
-            ]
+                'results' => collect($result['RESULT'])->map(fn ($item) => $this->labItemCast($item))->values()->all(),
+            ],
         ];
     }
 
@@ -151,7 +151,7 @@ class LabAPI implements LabAPIContract
         $form = [
             'HN' => $validated['hn'],
             'GROUP_SERVICE_ID' => $validated['service_ids'],
-            'GROUP' => !($validated['latest'] ?? true),
+            'GROUP' => ! ($validated['latest'] ?? true),
         ];
         if (isset($validated['date_start']) && isset($validated['date_end'])) {
             $form['START_DATE'] = $validated['date_start'];
@@ -171,10 +171,10 @@ class LabAPI implements LabAPIContract
                 'lab_no' => $item['LAB_NO'],
                 'service_id' => $item['SERV_ID'],
                 'service_name' => $item['SERV_DESC'],
-                'datetime_order' => $item['ORDER_DATE'] . ' ' . $item['ORDER_TIME'],
-                'datetime_specimen_received' => $item['SPECIMEN_RECEIVED'] . ' ' . $item['SPECIMEN_RECEIVED_TIME'],
+                'datetime_order' => $item['ORDER_DATE'].' '.$item['ORDER_TIME'],
+                'datetime_specimen_received' => $item['SPECIMEN_RECEIVED'].' '.$item['SPECIMEN_RECEIVED_TIME'],
                 'datetime_report' => $item['REPORT_DATE'] && $item['REPORT_TIME']
-                    ? $item['REPORT_DATE'] . ' ' . $item['REPORT_TIME']
+                    ? $item['REPORT_DATE'].' '.$item['REPORT_TIME']
                     : null,
                 'requester_id' => $item['REQUESTOR_ID'],
                 'requester' => $item['REQUESTOR'],
@@ -285,10 +285,10 @@ class LabAPI implements LabAPIContract
             'ref_no' => $item['REF_NO'],
             'service_id' => $item['SERV_ID'],
             'service_name' => $item['SERV_DESC'],
-            'datetime_order' => $item['ORDER_DATE'] . ' ' . $item['ORDER_TIME'],
-            'datetime_specimen_received' => $item['SPECIMEN_RECEIVED'] . ' ' . $item['SPECIMEN_RECEIVED_TIME'],
+            'datetime_order' => $item['ORDER_DATE'].' '.$item['ORDER_TIME'],
+            'datetime_specimen_received' => $item['SPECIMEN_RECEIVED'].' '.$item['SPECIMEN_RECEIVED_TIME'],
             'datetime_report' => $item['REPORT_DATE'] && $item['REPORT_TIME']
-                ? $item['REPORT_DATE'] . ' ' . $item['REPORT_TIME']
+                ? $item['REPORT_DATE'].' '.$item['REPORT_TIME']
                 : null,
             'requester_id' => $item['REQUESTOR_ID'],
             'requester' => $item['REQUESTOR'],
