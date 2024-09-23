@@ -19,7 +19,7 @@ class ItemizeController extends Controller
             'item_status' => ['nullable', 'in:ALL,Enable,Disable'],
         ]);
 
-        $api = new ItemizeAPI();
+        $api = new ItemizeAPI;
 
         $data = $api->getItem(
             $validated['category'],
