@@ -32,7 +32,7 @@ class UpdateAdmissionList extends Command
      */
     public function handle(): void
     {
-        $api = new PatientAPI();
+        $api = new PatientAPI;
         $manager = new AdmissionManager;
         /** @var PersonalAccessToken $token */
         $token = User::query()

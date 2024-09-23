@@ -11,7 +11,7 @@ class PersonalAccessTokenController extends Controller
 {
     public function store(Request $request)
     {
-        $service = new RoleUserService();
+        $service = new RoleUserService;
         $user = $request->user();
 
         $validated = $request->validate([

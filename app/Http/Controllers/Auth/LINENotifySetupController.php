@@ -56,7 +56,7 @@ class LINENotifySetupController extends Controller
 
     protected function shouldInitRoot(User $user): void
     {
-        $service = new RootInitiateService();
+        $service = new RootInitiateService;
         if ($service->isRootInitiated()) {
             return;
         }

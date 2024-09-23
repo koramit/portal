@@ -10,8 +10,7 @@ class LINEBaseNotification extends Notification
 {
     public function __construct(
         protected string $message
-    ) {
-    }
+    ) {}
 
     public function via(object $notifiable): ?string
     {
@@ -24,6 +23,6 @@ class LINEBaseNotification extends Notification
 
     public function toLINE(object $notifiable): LINENotifyMessage
     {
-        return (new LINENotifyMessage())->text($this->message);
+        return (new LINENotifyMessage)->text($this->message);
     }
 }

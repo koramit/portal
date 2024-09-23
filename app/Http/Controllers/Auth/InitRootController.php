@@ -11,7 +11,7 @@ class InitRootController extends Controller
 {
     public function __invoke(int $code, Request $request)
     {
-        $service = new RootInitiateService();
+        $service = new RootInitiateService;
         if ($service->isRootInitiated()) {
             abort(403);
         }
