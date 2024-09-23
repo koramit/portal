@@ -7,14 +7,11 @@ use App\Models\PersonalAccessToken;
 use App\Models\Resources\AdmissionCall;
 use App\Models\User;
 use App\Services\AdmissionManager;
-use App\Traits\ServiceAccessLoggable;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 
 class BuildAdmissionList extends Command
 {
-    use ServiceAccessLoggable;
-
     /**
      * The name and signature of the console command.
      *
