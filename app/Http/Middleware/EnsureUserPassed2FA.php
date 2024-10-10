@@ -11,7 +11,7 @@ class EnsureUserPassed2FA
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user()->line_notify_enabled && session('2fa_passed') !== true) {
+        if ($request->user()->notifiable && session('2fa_passed') !== true) {
             (new TwoFactorService($request->user()))->notify();
 
             return redirect()->route('2fa');

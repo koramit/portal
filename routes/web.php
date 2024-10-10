@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PersonalAccessTokenController;
 use App\Http\Controllers\RevokeServiceRequestFormController;
 use App\Http\Controllers\ServiceRequestFormController;
+use App\Http\Controllers\SetupNotificationController;
 use Illuminate\Support\Facades\Route;
 
 // register
@@ -42,7 +43,8 @@ Route::post('/2fa', [TwoFactorsChallengeController::class, 'store'])
     ->name('2fa.store');
 
 // LINE notify
-Route::controller(LINENotifySetupController::class)
+// @TODO: remove LINE notify service
+/*Route::controller(LINENotifySetupController::class)
     ->name('line-notify')
     ->group(function () {
         Route::get('/line-notify-auth', 'create')
@@ -50,7 +52,7 @@ Route::controller(LINENotifySetupController::class)
             ->name('.auth');
         Route::get('/line-notify-callback', 'store')
             ->name('.callback');
-    });
+    });*/
 
 // Dashboard
 Route::get('/', DashboardController::class)
@@ -59,11 +61,11 @@ Route::get('/', DashboardController::class)
 
 // Service Request Form
 Route::patch('/service-request-forms/{form}/revoke', RevokeServiceRequestFormController::class)
-    ->middleware(['auth', 'line-notify.enabled', '2fa-passed', 'can:revoke,form'])
+    ->middleware(['auth', 'user.notifiable', '2fa-passed', 'can:revoke,form'])
     ->name('service-request-forms.revoke');
 Route::controller(ServiceRequestFormController::class)
     ->prefix('service-request-forms')
-    ->middleware(['auth', 'line-notify.enabled', '2fa-passed'])
+    ->middleware(['auth', 'user.notifiable', '2fa-passed'])
     ->name('service-request-forms')
     ->group(function () {
         Route::get('/', 'index')
@@ -92,3 +94,11 @@ Route::delete('/app-tokens/{token}', [PersonalAccessTokenController::class, 'des
 // init root
 Route::get('/init-root/{code}', InitRootController::class)
     ->middleware(['auth']);
+
+// setup notification
+Route::get('/setup-notification', [SetupNotificationController::class, 'index'])
+    ->middleware(['auth'])
+    ->name('setup-notification');
+Route::post('/setup-notification', [SetupNotificationController::class, 'store'])
+    ->middleware(['auth'])
+    ->name('setup-notification.store');
