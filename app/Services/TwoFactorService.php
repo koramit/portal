@@ -28,6 +28,7 @@ class TwoFactorService
         if (! $this->user->slack_webhook_url) {
             // @TODO: remove LINE notify service
             $this->user->notify(new LINEBaseNotification($message));
+
             return;
         }
         Http::post($this->user->slack_webhook_url, [

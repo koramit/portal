@@ -44,6 +44,7 @@ class TokenExpiredReminder extends Command
                 if (! $user->slack_webhook_url) {
                     $notification = new LINEBaseNotification($message);
                     $user->notify($notification);
+
                     return;
                 }
                 Http::post($user->slack_webhook_url, [
