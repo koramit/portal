@@ -88,7 +88,7 @@ namespace App\Models\Resources{
  * @property int $hn
  * @property string $name
  * @property \Illuminate\Support\Carbon|null $dob
- * @property-read int $gender
+ * @property int $gender
  * @property string|null $discharge_type_name
  * @property string|null $discharge_status_name
  * @property \Illuminate\Support\Carbon|null $admitted_at
@@ -156,6 +156,7 @@ namespace App\Models\Resources{
  * @property int $attending_staff_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Resources\Ward $ward
  * @method static \Illuminate\Database\Eloquent\Builder|AdmissionTransfer newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AdmissionTransfer newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AdmissionTransfer query()
@@ -251,7 +252,7 @@ namespace App\Models{
  * @property int $found
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\PersonalAccessToken|null $personalAccessToken
+ * @property-read \App\Models\PersonalAccessToken $personalAccessToken
  * @method static \Illuminate\Database\Eloquent\Builder|ServiceAccessLog newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ServiceAccessLog newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ServiceAccessLog query()
@@ -311,16 +312,19 @@ namespace App\Models{
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Database\Eloquent\Casts\AsEncryptedArrayObject|null $profile
  * @property-read mixed $abilities
  * @property-read mixed $abilities_id
  * @property-read mixed $hashed_key
  * @property-read mixed $line_notify_enabled
+ * @property-read mixed $notifiable
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  * @property-read mixed $role_labels
  * @property-read mixed $role_names
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Role> $roles
  * @property-read int|null $roles_count
+ * @property-read mixed $slack_webhook_url
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PersonalAccessToken> $tokens
  * @property-read int|null $tokens_count
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
@@ -335,6 +339,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User whereLineNotifyToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereProfile($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  */

@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Traits\PKHashable;
+use Illuminate\Database\Eloquent\Casts\AsEncryptedArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -33,6 +34,7 @@ class User extends Authenticatable
     protected $casts = [
         'expire_at' => 'datetime',
         'line_notify_token' => 'encrypted',
+        'profile' => AsEncryptedArrayObject::class,
     ];
 
     public function roles(): BelongsToMany
@@ -80,6 +82,21 @@ class User extends Authenticatable
     {
         return Attribute::make(
             get: fn () => $this->line_notify_token !== null,
+        );
+    }
+
+    public function slackWebhookUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->profile['slack_webhook_url'] ?? null,
+        );
+    }
+
+    public function notifiable(): Attribute
+    {
+        // @TODO: remove LINE notify service
+        return Attribute::make(
+            get: fn () => $this->slack_webhook_url || $this->line_notify_token,
         );
     }
 
