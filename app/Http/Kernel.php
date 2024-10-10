@@ -64,7 +64,7 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'line-notify.enabled' => \App\Http\Middleware\EnsureLINENotifyIsEnabled::class,
+        'user.notifiable' => \App\Http\Middleware\EnsureUserIsNotifiable::class,
         '2fa-passed' => \App\Http\Middleware\EnsureUserPassed2FA::class,
         'ability' => \Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class,
         'abilities' => \Laravel\Sanctum\Http\Middleware\CheckAbilities::class,

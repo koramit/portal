@@ -3,8 +3,10 @@
 namespace App\Console\Commands;
 
 use App\Models\PersonalAccessToken;
+use App\Models\User;
 use App\Notifications\LINEBaseNotification;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
 
 class TokenExpiredReminder extends Command
 {
@@ -35,8 +37,19 @@ class TokenExpiredReminder extends Command
                 if ($token->status !== 'active') {
                     return;
                 }
-                $notification = new LINEBaseNotification("Your token $token->name will be expired in {$token->expires_at->diffForHumans()}.");
-                $token->tokenable->notify($notification);
+                $message = "Your token $token->name will be expired in {$token->expires_at->diffForHumans()}.";
+                // @TODO: remove LINE notify service
+                /** @var User $user */
+                $user = $token->tokenable;
+                if (! $user->slack_webhook_url) {
+                    $notification = new LINEBaseNotification($message);
+                    $user->notify($notification);
+
+                    return;
+                }
+                Http::post($user->slack_webhook_url, [
+                    'text' => $message,
+                ]);
             });
     }
 }

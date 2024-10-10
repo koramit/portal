@@ -7,8 +7,8 @@
                 <li>
                     <a
                         class="text-sm md:text-base text-teal-500 hover:text-teal-700"
-                        href="{{ route('line-notify.auth') }}"
-                    >Set LINE notify</a>
+                        href="{{ route('setup-notification') }}"
+                    >Setup Notification</a>
                 </li>
                 <li>
                     <a
