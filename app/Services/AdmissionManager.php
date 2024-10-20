@@ -49,9 +49,6 @@ class AdmissionManager
         $admission->discharge_type_name = $data['discharge_type_name'];
         $admission->discharge_status_name = $data['discharge_status_name'];
 
-        $ward = $this->maintainWard($data['ward_name'], $data['ward_name_short'], $data['ward_number']);
-        $staff = $this->maintainAttendingStaff($data['attending'], $data['attending_license_no'] ?? $data['attending']);
-
         $admission->ward_id = $ward->id;
         $admission->attending_staff_id = $staff->id;
         $admission->checked_at = now();
@@ -76,8 +73,11 @@ class AdmissionManager
         ]);
     }
 
-    protected function maintainAttendingStaff($name, $licenseNo)
+    protected function maintainAttendingStaff(?string $name, ?string $licenseNo)
     {
+        $name = $name ?? 'no data';
+        $licenseNo = $licenseNo ?? 'no data';
+
         if ($staff = AttendingStaff::query()->where('license_no', $licenseNo)->first()) {
             return $staff;
         }
