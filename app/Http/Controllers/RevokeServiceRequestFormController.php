@@ -8,6 +8,7 @@ use App\Models\ServiceRequestForm;
 use App\Notifications\LINEBaseNotification;
 use App\Services\RoleUserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class RevokeServiceRequestFormController extends Controller
 {
@@ -52,8 +53,14 @@ class RevokeServiceRequestFormController extends Controller
                 $token->status = 'revoked';
                 $token->save();
 
-                $notifyText = "Your token {$token->name} has been revoked by {$authority->name} because your service request has been revoked.";
-                $requester->notify(new LINEBaseNotification($notifyText));
+                $message = "Your token $token->name has been revoked by $authority->name because your service request has been revoked.";
+                if (! $requester->slack_webhook_url) {
+                    $requester->notify(new LINEBaseNotification($message));
+                } else {
+                    Http::post($requester->slack_webhook_url, [
+                        'text' => $message,
+                    ]);
+                }
             });
 
         return back()->with('status', 'Approved Service request has been revoked.');
