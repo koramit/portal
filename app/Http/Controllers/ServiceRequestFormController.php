@@ -8,6 +8,7 @@ use App\Notifications\LINEBaseNotification;
 use App\Services\RoleUserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
 
 class ServiceRequestFormController extends Controller
 {
@@ -55,13 +56,23 @@ class ServiceRequestFormController extends Controller
         $form['note'] = strip_tags($validated['note']);
         $form['response'] = null;
 
+        $user = $request->user();
+
         ServiceRequestForm::query()
             ->create([
-                'requester_id' => $request->user()->id,
+                'requester_id' => $user->id,
                 'form' => $form,
             ]);
 
-        $request->user()->notify(new LINEBaseNotification('You just submitted the service request form.'));
+        // @TODO: remove LINE notify service
+        $message = 'You just submitted the service request form.';
+        if (! $user->slack_webhook_url) {
+            $user->notify(new LINEBaseNotification($message));
+        } else {
+            Http::post($user->slack_webhook_url, [
+                'text' => $message,
+            ]);
+        }
 
         return redirect()->route('dashboard')->with(['status' => 'Service request form submitted.']);
     }
@@ -103,10 +114,17 @@ class ServiceRequestFormController extends Controller
         $form->save();
 
         if ($form->status === 'disapproved') {
-            $form->requester->notify(new LINEBaseNotification('Your service request was disapproved. Reply: '.$validated['reply']));
-        } elseif ($form->status === 'approved') {
+            $message = 'Your service request was disapproved. Reply: '.$validated['reply'];
+        } else {
             (new RoleUserService)->attachRoles($form);
-            $form->requester->notify(new LINEBaseNotification('Your service request was approved. '.$validated['reply']));
+            $message = 'Your service request was approved. Reply: '.$validated['reply'];
+        }
+        if (! $form->requester->slack_webhook_url) {
+            $form->requester->notify(new LINEBaseNotification($message));
+        } else {
+            Http::post($form->requester->slack_webhook_url, [
+                'text' => $message,
+            ]);
         }
 
         return redirect()->route('dashboard')->with(['status' => 'Service request form responded.']);
@@ -117,6 +135,14 @@ class ServiceRequestFormController extends Controller
         $form->status = 'canceled';
         $form->save();
         $form->requester->notify(new LINEBaseNotification('Service request form canceled.'));
+        $message = 'Service request form canceled.';
+        if (! $form->requester->slack_webhook_url) {
+            $form->requester->notify(new LINEBaseNotification($message));
+        } else {
+            Http::post($form->requester->slack_webhook_url, [
+                'text' => $message,
+            ]);
+        }
 
         return redirect()->route('dashboard')->with(['status' => 'Service request form canceled.']);
     }

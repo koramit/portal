@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\PersonalAccessToken;
+use App\Models\User;
 use App\Notifications\LINEBaseNotification;
 use App\Services\RoleUserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class PersonalAccessTokenController extends Controller
 {
@@ -44,7 +46,17 @@ class PersonalAccessTokenController extends Controller
         $token->expires_at = $token->revoked_at; // tell Sanctum that this token is expired
         $token->save();
 
-        $token->tokenable->notify(new LINEBaseNotification("Your token [$token->name] has been revoked."));
+        $message = "Your token [$token->name] has been revoked.";
+        // @TODO: remove LINE notify service
+        /** @var User $user */
+        $user = $token->tokenable;
+        if (! $user->slack_webhook_url) {
+            $user->notify(new LINEBaseNotification($message));
+        } else {
+            Http::post($user->slack_webhook_url, [
+                'text' => $message,
+            ]);
+        }
 
         return back()->with('status', 'Token revoked successfully');
     }
