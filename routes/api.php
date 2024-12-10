@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AuthenticateUserADFSController;
 use App\Http\Controllers\API\AdmissionController;
 use App\Http\Controllers\API\AdmissionDischargeDateController;
 use App\Http\Controllers\API\AdmissionTransferController;
@@ -41,6 +42,9 @@ Route::middleware('auth:sanctum')
         Route::post('/authenticate-with-sensitive-data', AuthenticateUserController::class)
             ->middleware('ability:user:authenticate')
             ->name('api.authenticate-with-sensitive-data');
+        Route::post('/authenticate-adfs', AuthenticateUserADFSController::class)
+            ->middleware('ability:user:authenticate')
+            ->name('api.authenticate-adfs');
 
         Route::post('/patient', PatientController::class)
             ->middleware('ability:patient:data')

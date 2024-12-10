@@ -182,8 +182,20 @@ class UserAPI implements UserAPIContract
 
     protected function getStatus(string $id): array
     {
-        $response = Http::withOptions(['verify' => false])
-            ->post(config('siad.user_status_url'), ['employeeID' => $id]);
+        try {
+            $response = Http::withOptions(['verify' => false])
+                ->post(config('siad.user_status_url'), ['employeeID' => $id]);
+        } catch (Exception $e) {
+            Log::error('UserAPI@getStatus: '.$e->getMessage());
+
+            return [
+                'ok' => false,
+                'found' => false,
+                'status' => 500,
+                'error' => 'server',
+                'message' => $e->getMessage(),
+            ];
+        }
 
         if ($response->status() !== 200) {
             return [
@@ -213,17 +225,23 @@ class UserAPI implements UserAPIContract
 
     protected function altAuthenticate(string $login, string $password): array
     {
-        $userData = [
+        $errorResponse = [
             'ok' => false,
+            'found' => false,
             'status' => 500,
             'error' => 'server',
             'message' => 'alt also failed',
         ];
+        try {
+            $response = Http::acceptJson()->post(config('siad.alt_auth_url'), [
+                'username' => $login,
+                'password' => $password,
+            ]);
+        } catch (Exception $e) {
+            Log::error('UserAPI@altAuthenticate::lab_auth | '.$e->getMessage());
 
-        $response = Http::acceptJson()->post(config('siad.alt_auth_url'), [
-            'username' => $login,
-            'password' => $password,
-        ]);
+            return $errorResponse;
+        }
 
         $authenticated = $response->status() === 200
             || ($response->status() === 400 && ($response->json()['message'] ?? null) === 'ท่านไม่มีสิทธิ์ใช้งานระบบ');
@@ -249,12 +267,18 @@ class UserAPI implements UserAPIContract
         $userData['login'] = $login;
         $token = $response->json()['access_token'];
 
-        $response = Http::acceptJson()
-            ->withToken($token)
-            ->get(config('siad.alt_user_info_url'));
+        try {
+            $response = Http::acceptJson()
+                ->withToken($token)
+                ->get(config('siad.alt_user_info_url'));
+        } catch (Exception $e) {
+            Log::error('UserAPI@altAuthenticate::lab_info | '.$e->getMessage());
+
+            return $errorResponse;
+        }
 
         if ($response->status() !== 200) {
-            return $userData;
+            return $errorResponse;
         }
 
         $u1 = $response->json();
@@ -262,11 +286,17 @@ class UserAPI implements UserAPIContract
         $userData['full_name'] = $u1['unique_name'];
         $userData['email'] = $u1['email'];
 
-        $response = Http::acceptJson()
-            ->post(config('siad.alt_user_org_id_url'), ['employeeID' => $userData['org_id']]);
+        try {
+            $response = Http::acceptJson()
+                ->post(config('siad.alt_user_org_id_url'), ['employeeID' => $userData['org_id']]);
+        } catch (Exception $e) {
+            Log::error('UserAPI@altAuthenticate::checkSamAcc | '.$e->getMessage());
+
+            return $errorResponse;
+        }
 
         if ($response->status() !== 200) {
-            return $userData;
+            return $errorResponse;
         }
 
         $u2 = $response->json();
@@ -276,5 +306,85 @@ class UserAPI implements UserAPIContract
         $userData['alt'] = true;
 
         return $userData;
+    }
+
+    public function authenticateADFS(string $login, string $password): array
+    {
+        $data = [
+            'grant_type' => 'password',
+            'username' => $login.'@sihmis.si',
+            'password' => $password,
+            'client_id' => config('siad.adfs_client_id'),
+            'client_secret' => config('siad.adfs_client_secret'),
+        ];
+
+        try {
+            $res = Http::acceptJson()
+                ->asForm()
+                ->post(config('siad.adfs_auth_url'), $data)
+                ->json();
+        } catch (Exception $e) {
+            Log::error('authenticate_adfs@'.$e->getMessage());
+
+            return [
+                'ok' => false,
+                'found' => false,
+                'status' => 500,
+                'error' => 'server',
+                'message' => $e->getMessage(),
+            ];
+        }
+
+        if (array_key_exists('error', $res) && $res['error'] === 'invalid_grant') {
+            return [
+                'ok' => true,
+                'found' => false,
+                'message' => 'not found',
+            ];
+        }
+
+        $payload = explode('.', $res['access_token'])[1];
+        $payload = base64_decode(strtr($payload, '-_', '+/'));
+        $userData = json_decode($payload, true);
+
+        $remark = implode(' ', [
+            $userData['display_name'] ?? '',
+            $userData['Job Description'] ?? '',
+            $userData['OrganizationUnit'] ?? '',
+            $userData['Department'] ?? '',
+        ]);
+
+        $response = null;
+        try {
+            $response = Http::acceptJson()
+                ->post(config('siad.alt_user_org_id_url'), ['employeeID' => $userData['employee_id']]);
+        } catch (Exception $e) {
+            Log::error('UserAPI@authenticateADFS::checkSamAcc | '.$e->getMessage());
+        }
+
+        $passwordExpiredInDays = null;
+
+        if ($response && $response->status() === 200) {
+            $passwordExpiredInDays = $response->json()['pwdExpiryDay'];
+        }
+
+        return [
+            'ok' => true,
+            'found' => true,
+            'login' => $login,
+            'org_id' => $userData['employee_id'] ?? null,
+            'full_name' => $userData['display_name'] ?? null,
+            'full_name_en' => $userData['commonname'] ?? null,
+            'document_id' => null,
+            'position_id' => $userData['Position'] ?? null,
+            'position_name' => $userData['Job Description'] ?? null,
+            'division_id' => null,
+            'division_name' => $userData['OrganizationUnit'] ?? null,
+            'department_name' => $userData['Department'] ?? null,
+            'office_name' => $userData['OrganizationUnit'] ?? null,
+            'email' => $userData['email'] ?? null,
+            'password_expires_in_days' => $passwordExpiredInDays,
+            'remark' => trim($remark),
+        ];
     }
 }

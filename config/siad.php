@@ -22,4 +22,7 @@ return [
     'alt_auth_url' => env('SIAD_ALT_AUTH_URL'),
     'alt_user_info_url' => env('SIAD_ALT_USER_INFO_URL'),
     'alt_user_org_id_url' => env('SIAD_ALT_USER_ORG_ID_URL'),
+    'adfs_client_id' => env('SIAD_ADFS_CLIENT_ID'),
+    'adfs_client_secret' => env('SIAD_ADFS_CLIENT_SECRET'),
+    'adfs_auth_url' => env('SIAD_ADFS_AUTH_URL'),
 ];
