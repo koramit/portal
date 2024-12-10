@@ -80,4 +80,9 @@ class FakeUserAPI implements UserAPI
             'remark' => $faker->sentence(),
         ];
     }
+
+    public function authenticateADFS(string $login, string $password): array
+    {
+        return $this->authenticate($login, $password, false);
+    }
 }
