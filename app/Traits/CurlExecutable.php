@@ -15,8 +15,10 @@ trait CurlExecutable
 
         $ch = curl_init();
         // curl_setopt($ch, CURLOPT_VERBOSE, true); // for debug
+        // curl_setopt($ch, CURLOPT_TIMEOUT, config('app.API_TIMEOUT'));
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_URL, $url);
-        // curl_setopt($ch, CURLOPT_TIMEOUT, config('app.API_TIMEOUT')); // set connection timeout.
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $strSOAP);
