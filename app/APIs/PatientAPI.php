@@ -67,7 +67,7 @@ class PatientAPI implements AdmissionAPI, PatientAPIContract
             'found' => true,
             'alive' => $this->patientAlive($hn),
             'hn' => $hn,
-            'patient_name' => ($data['title'] ?? '').' '.($data['patient_firstname'] ?? '').' '.($data['patient_surname'] ?? ''),
+            'patient_name' => $data['patient_name'] ?? null,
             'title' => $data['title'] ?? null,
             'first_name' => $data['patient_firstname'] ?? null,
             'middle_name' => $data['patient_middlename'] ?? null,
