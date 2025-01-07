@@ -25,7 +25,7 @@ class RootInitiateService
         cache()->put('root-initiate-code', $code, now()->addMinutes(5));
 
         // @TODO: remove LINE notify service
-        /*$user->notify(new LINEBaseNotification("ใช้ code ต่อไปนี้เพื่อเป็น root: $code"));*/
+        /* $user->notify(new LINEBaseNotification("ใช้ code ต่อไปนี้เพื่อเป็น root: $code")); */
         Http::post($user->slack_webhook_url, [
             'text' => "ใช้ code ต่อไปนี้เพื่อเป็น root: $code",
         ]);
