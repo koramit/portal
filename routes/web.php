@@ -102,3 +102,8 @@ Route::get('/setup-notification', [SetupNotificationController::class, 'index'])
 Route::post('/setup-notification', [SetupNotificationController::class, 'store'])
     ->middleware(['auth'])
     ->name('setup-notification.store');
+
+// test-dsl
+Route::post('/test-dsl/patient-allergy', function () {
+    return (new App\APIs\PatientAllergyAPI())(request()->hn);
+});
