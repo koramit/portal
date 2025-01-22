@@ -6,6 +6,7 @@ use App\Contracts\AdmissionAPI;
 use App\Contracts\PatientAPI as PatientAPIContract;
 use App\Traits\CurlExecutable;
 use Illuminate\Support\Facades\Cache;
+use Throwable;
 
 class PatientAPI implements AdmissionAPI, PatientAPIContract
 {
@@ -20,12 +21,15 @@ class PatientAPI implements AdmissionAPI, PatientAPIContract
         'message' => 'Server Error',
     ];
 
+    /**
+     * @throws Throwable
+     */
     public function getPatient(int $hn, bool $withSensitiveInfo): array
     {
-        $functionName = 'SearchPatientDataDescriptionTypeExcludeD'; // return alive and dead patient
-        $action = 'http://tempuri.org/'.$functionName;
+        $action = 'http://tempuri.org/SearchPatientDataDescriptionTypeExcludeD'; // return alive and dead patient
+        $SOAPStr = view('siit_soap.SearchPatientDataDescriptionTypeExcludeD')->with(['key' => $hn])->render();
 
-        if (($response = $this->executeCurl($this->composeSOAP($functionName, 'hn', $hn), $action, config('simrs.patient_url'))) === false) {
+        if (($response = $this->executeCurl($SOAPStr, $action, config('simrs.patient_url'))) === false) {
             return $this->serverError;
         }
 
@@ -63,7 +67,7 @@ class PatientAPI implements AdmissionAPI, PatientAPIContract
             'found' => true,
             'alive' => $this->patientAlive($hn),
             'hn' => $hn,
-            'patient_name' => ($data['title'] ?? '').' '.($data['patient_firstname'] ?? '').' '.($data['patient_surname'] ?? ''),
+            'patient_name' => $data['patient_name'] ?? null,
             'title' => $data['title'] ?? null,
             'first_name' => $data['patient_firstname'] ?? null,
             'middle_name' => $data['patient_middlename'] ?? null,
@@ -110,12 +114,15 @@ class PatientAPI implements AdmissionAPI, PatientAPIContract
         return $patient;
     }
 
+    /**
+     * @throws Throwable
+     */
     public function getAdmission(int $an, bool $withSensitiveInfo): array
     {
-        $functionName = 'SearchInpatientAllByAN';
-        $action = 'http://tempuri.org/'.$functionName;
+        $action = 'http://tempuri.org/SearchInpatientAllByAN';
+        $SOAPStr = view('siit_soap.SearchInpatientAllByAN')->with(['key' => $an])->render();
 
-        if (($response = $this->executeCurl($this->composeSOAP($functionName, 'AN', $an, 'UserName'), $action, config('simrs.patient_url'))) === false) {
+        if (($response = $this->executeCurl($SOAPStr, $action, config('simrs.patient_url'))) === false) {
             return $this->serverError;
         }
 
@@ -143,12 +150,15 @@ class PatientAPI implements AdmissionAPI, PatientAPIContract
         return $this->handleAdmitData($data, $withSensitiveInfo);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function getPatientAdmissions(int $hn, bool $withSensitiveInfo): array
     {
-        $functionName = 'SearchInpatientAll';
-        $action = 'http://tempuri.org/'.$functionName;
+        $action = 'http://tempuri.org/SearchInpatientAll';
+        $SOAPStr = view('siit_soap.SearchInpatientAll')->with(['key' => $hn])->render();
 
-        if (($response = $this->executeCurl($this->composeSOAP($functionName, 'HN', $hn, 'UserName'), $action, config('simrs.patient_url'))) === false) {
+        if (($response = $this->executeCurl($SOAPStr, $action, config('simrs.patient_url'))) === false) {
             return $this->serverError;
         }
 
@@ -191,6 +201,9 @@ class PatientAPI implements AdmissionAPI, PatientAPIContract
         ];
     }
 
+    /**
+     * @throws Throwable
+     */
     public function getPatientRecentlyAdmission(int $hn, bool $withSensitiveInfo): array
     {
         $cacheKey = 'recently-admit-'.$hn;
@@ -210,23 +223,6 @@ class PatientAPI implements AdmissionAPI, PatientAPIContract
 
             return $admissions;
         }
-    }
-
-    protected function composeSOAP(string $functionName, string $keyName, string $keyValue, string $userTag = 'Username'): string
-    {
-        $SOAPStr = '<?xml version="1.0" encoding="utf-8"?>';
-        $SOAPStr .= '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">';
-        $SOAPStr .= '<soap:Body>';
-        $SOAPStr .= '<'.$functionName.' xmlns="http://tempuri.org/">';
-        $SOAPStr .= '<'.$keyName.'>'.$keyValue.'</'.$keyName.'>';
-        $SOAPStr .= '<'.$userTag.'>'.config('simrs.api_username').'</'.$userTag.'>';
-        $SOAPStr .= '<Password>'.config('simrs.api_password').'</Password>';
-        $SOAPStr .= '<RequestComputerName></RequestComputerName>';
-        $SOAPStr .= '</'.$functionName.'>';
-        $SOAPStr .= '</soap:Body>';
-        $SOAPStr .= '</soap:Envelope>';
-
-        return $SOAPStr;
     }
 
     protected function noResult(string $code): bool|array
@@ -258,12 +254,15 @@ class PatientAPI implements AdmissionAPI, PatientAPIContract
         }
     }
 
+    /**
+     * @throws Throwable
+     */
     protected function patientAlive(string $hn): ?bool
     {
-        $functionName = 'SearchPatientData'; // return alive patient only
-        $action = 'http://tempuri.org/'.$functionName;
+        $action = 'http://tempuri.org/SearchPatientData'; // return alive patient only
+        $SOAPStr = view('siit_soap.SearchPatientData')->with(['key' => $hn])->render();
 
-        if (($response = $this->executeCurl($this->composeSOAP($functionName, 'hn', $hn), $action, config('simrs.patient_url'))) === false) {
+        if (($response = $this->executeCurl($SOAPStr, $action, config('simrs.patient_url'))) === false) {
             return null;
         }
 
@@ -304,6 +303,9 @@ class PatientAPI implements AdmissionAPI, PatientAPIContract
         return null;
     }
 
+    /**
+     * @throws Throwable
+     */
     protected function handleAdmitData($data, $withSensitiveInfo): array
     {
         $this->patient = $this->getPatient($data['hn'], $withSensitiveInfo);

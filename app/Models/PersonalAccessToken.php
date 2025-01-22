@@ -12,10 +12,10 @@ class PersonalAccessToken extends SanctumPersonalAccessToken
     use PKHashable;
 
     const STATUSES = [
-        /* 0*/ 'unverified',
-        /* 1*/ 'active',
-        /* 2*/ 'expired',
-        /* 3*/ 'revoked',
+        /* 0 */ 'unverified',
+        /* 1 */ 'active',
+        /* 2 */ 'expired',
+        /* 3 */ 'revoked',
     ];
 
     public function status(): Attribute

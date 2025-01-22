@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\API\AuthenticateUserADFSController;
 use App\Http\Controllers\API\AdmissionController;
 use App\Http\Controllers\API\AdmissionDischargeDateController;
 use App\Http\Controllers\API\AdmissionTransferController;
+use App\Http\Controllers\API\AuthenticateUserADFSController;
 use App\Http\Controllers\API\AuthenticateUserController;
 use App\Http\Controllers\API\COVID19PCRLabController;
 use App\Http\Controllers\API\COVID19VaccinationController;
