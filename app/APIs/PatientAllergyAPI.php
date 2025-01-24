@@ -36,10 +36,12 @@ class PatientAllergyAPI implements \App\Contracts\PatientAllergyAPI
             ];
         }
 
+        $response = $response->json();
+
         return [
             'ok' => true,
-            'found' => true,
-            'response' => $response->json(),
+            'found' => $response['total'] > 0,
+            'response' => $response,
         ];
     }
 }

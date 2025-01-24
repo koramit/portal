@@ -8,4 +8,5 @@ return [
         'x-consumer-id' => env('SI_DSL_CONSUMER_ID'),
     ],
     'allergy_endpoint' => env('SI_DSL_ALLERGY_ENDPOINT'),
+    'patient_endpoint' => env('SI_DSL_PATIENT_ENDPOINT'),
 ];

@@ -107,3 +107,6 @@ Route::post('/setup-notification', [SetupNotificationController::class, 'store']
 Route::post('/test-dsl/patient-allergy', function () {
     return (new App\APIs\PatientAllergyAPI())(request()->hn);
 });
+Route::post('/test-dsl/dsl/patient', function () {
+    return (new App\APIs\PatientFHIR())->getPatient(request()->key_name, request()->key_value, request()->raw);
+});
