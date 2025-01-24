@@ -245,7 +245,7 @@ class PatientFHIR
         $body = ['request' => ['_format' => 'json', 'subsystem' => 'SYS_1', 'EpisodeNumber' => (string) $an]];
         try {
             $response = Http::withOptions(['verify' => false])
-                ->get(config('si_dsl.proxy_url'), [
+                ->post(config('si_dsl.proxy_url'), [
                     'url' => config('si_dsl.admission_endpoint'),
                     'headers' => config('si_dsl.headers'),
                     'body' => $body,
