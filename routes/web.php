@@ -137,3 +137,17 @@ Route::post('/test-dsl/dsl/admission-with-sensitive-data', function () {
         true
     );
 });
+Route::post('/test-dsl/dsl/patient-admissions', function () {
+    return (new App\APIs\PatientFHIR())->getPatientAdmissions(
+        request()->hn,
+        request()->raw,
+        false
+    );
+});
+Route::post('/test-dsl/dsl/patient-admissions-with-sensitive-data', function () {
+    return (new App\APIs\PatientFHIR())->getPatientAdmissions(
+        request()->hn,
+        request()->raw,
+        true
+    );
+});

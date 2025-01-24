@@ -247,6 +247,57 @@ class PatientFHIR
     public function getAdmission(int $an, bool $raw, bool $withSensitiveInfo): array
     {
         $body = ['request' => ['_format' => 'json', 'subsystem' => 'SYS_1', 'EpisodeNumber' => (string) $an]];
+        $response = $this->callAdmissionDSL($body, 'admission-dsl');
+
+        if ($raw && $withSensitiveInfo) {
+            return $response;
+        }
+
+        $resource = $response['Response'][0];
+        $patient = $this->getPatient('hn', $resource['HospitalNumber'], false, $withSensitiveInfo);
+        if (!$patient['ok'] || !$patient['found']) {
+            return $patient;
+        }
+        $episode = $resource['Episode'][0];
+
+        $admission = $this->transformEpisode($episode, $patient, $withSensitiveInfo);
+        $admission['patient'] = $patient;
+
+        return $admission;
+    }
+
+    public function getPatientAdmissions(int $hn, bool $raw, bool $withSensitiveInfo): array
+    {
+        $body = ['request' => ['_format' => 'json', 'subsystem' => 'SYS_1', 'HospitalNumber' => (string) $hn]];
+        $response = $this->callAdmissionDSL($body, 'patient-admissions-dsl');
+        if (!$response['ok'] || !$response['found']) {
+            return $response;
+        }
+
+        if ($raw && $withSensitiveInfo) {
+            return $response;
+        }
+
+        $resource = $response['Response'][0];
+        $patient = $this->getPatient('hn', (string) $hn, false, $withSensitiveInfo);
+        if (!$patient['ok'] || !$patient['found']) {
+            return $patient;
+        }
+        $admissions = [];
+        foreach ($resource['Episode'] as $episode) {
+            $admissions[] = $this->transformEpisode($episode, $patient, $withSensitiveInfo);
+        }
+
+        return [
+            'ok' => true,
+            'found' => true,
+            'patient' => $patient,
+            'admissions' => $admissions,
+        ];
+    }
+
+    protected function callAdmissionDSL(array $body, string $debugLabel): array
+    {
         try {
             $response = Http::withOptions(['verify' => false])
                 ->post(config('si_dsl.proxy_url'), [
@@ -255,7 +306,7 @@ class PatientFHIR
                     'body' => $body,
                 ]);
         } catch (Exception $e) {
-            Log::error('admission-fhir@'.$e->getMessage());
+            Log::error($debugLabel.'@'.$e->getMessage());
 
             return [
                 'ok' => false,
@@ -281,36 +332,33 @@ class PatientFHIR
             ];
         }
 
-        if ($raw && $withSensitiveInfo) {
-            return [
-                'ok' => true,
-                'found' => true,
-                'response' => $response,
-            ];
-        }
+        return [
+            'ok' => true,
+            'found' => true,
+            'response' => $response,
+        ];
+    }
 
-        $patient = $this->getPatient('hn', $resource['HospitalNumber'], false, $withSensitiveInfo);
-        $episode = $resource['Episode'][0];
-
+    protected function transformEpisode(array $episode, array $patient, bool $withSensitiveInfo): array
+    {
         return [
             'ok' => true,
             'found' => true,
             'alive' => $patient['alive'],
             'hn' => $patient['hn'],
-            'an' => $an,
+            'an' => $episode['EpisodeNumber'],
             'dob' => $withSensitiveInfo ? $patient['dob'] : null,
-            'age_at_admitted' => $resource['PatientAge'],
             'gender' => $patient['gender'],
             'patient_name' => $patient['patient_name'],
-            'patient' => $patient,
+            'ward_number' => $episode['AdmittedWardCode'],
             'ward_name' => $episode['AdmittedWardName'],
             'ward_name_short' => null,
             'admitted_at' => $episode['AdmittedDateTime'],
             'discharged_at' => $episode['DischargeDateTime'],
-            'attending_admit' => $episode['PhysicianAdmitName'],
-            'attending_license_no_admit' => $episode['PhysicianAdmitCode'],
-            'attending_master' => $episode['PhysicianMasterName'],
-            'attending_license_no_master' => $episode['PhysicianMasterCode'],
+            /*'attending_admit' => $episode['PhysicianAdmitName'],
+            'attending_license_no_admit' => $episode['PhysicianAdmitCode'],*/
+            'attending' => $episode['PhysicianMasterName'],
+            'attending_license_no' => $episode['PhysicianMasterCode'],
             'discharge_type' => $episode['DischargeTypeLongName'] ? strtoupper($episode['DischargeTypeLongName']) : null,
             'discharge_status' => $episode['DischargeStatusLongName'] ? strtoupper($episode['DischargeStatusLongName']) : null,
             'department' => null,
