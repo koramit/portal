@@ -176,9 +176,16 @@ class PatientFHIR
                     }
                 }
                 $contactText .= $relate;
-                $contactText .= (' ' . $contact['name']['text'] ?? '');
-                $contactText .= (' ' . $contact['address']['text'] ?? '');
-                $contactText .= (' ' . $contact['telecom']['value'] ?? '');
+                if (array_key_exists('name', $contact)) {
+                    $contactText .= (' ' . $contact['name']['text'] ?? '');
+                }
+                if (array_key_exists('address', $contact)) {
+                    $contactText .= (' ' . $contact['address']['text'] ?? '');
+                }
+                if (array_key_exists('telecom', $contact)) {
+                    $contactText .= (' ' . $contact['telecom']['value'] ?? '');
+                }
+                
                 $altContact[] = trim($contactText);
             }
         }
