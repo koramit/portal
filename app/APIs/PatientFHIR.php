@@ -137,9 +137,11 @@ class PatientFHIR
         }
 
         $telNo = null;
-        foreach ($resource['telecom'] as $telecom) {
-            if ($telecom['system'] === 'phone') {
-                $telNo = $telecom['value'];
+        if (array_key_exists('telecom', $resource)) {
+            foreach ($resource['telecom'] as $telecom) {
+                if ($telecom['system'] === 'phone') {
+                    $telNo = $telecom['value'];
+                }
             }
         }
 
