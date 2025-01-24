@@ -295,7 +295,7 @@ class PatientFHIR
             'hn' => $patient['hn'],
             'an' => $an,
             'dob' => $withSensitiveInfo ? $patient['dob'] : null,
-            'age_at_admitted' => $episode['PatientAge'],
+            'age_at_admitted' => $resource['PatientAge'],
             'gender' => $patient['gender'],
             'patient_name' => $patient['patient_name'],
             'patient' => $patient,
