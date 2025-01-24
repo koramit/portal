@@ -278,7 +278,7 @@ class PatientFHIR
             return $response;
         }
 
-        $resource = $response['Response'][0];
+        $resource = $response['response']['Response'][0];
         $patient = $this->getPatient('hn', (string) $hn, false, $withSensitiveInfo);
         if (!$patient['ok'] || !$patient['found']) {
             return $patient;
