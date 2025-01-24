@@ -123,3 +123,17 @@ Route::post('/test-dsl/dsl/patient-with-sensitive-data', function () {
         true
     );
 });
+Route::post('/test-dsl/dsl/admission', function () {
+    return (new App\APIs\PatientFHIR())->getAdmission(
+        request()->an,
+        request()->raw,
+        false
+    );
+});
+Route::post('/test-dsl/dsl/admission-with-sensitive-data', function () {
+    return (new App\APIs\PatientFHIR())->getAdmission(
+        request()->an,
+        request()->raw,
+        true
+    );
+});

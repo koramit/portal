@@ -9,4 +9,5 @@ return [
     ],
     'allergy_endpoint' => env('SI_DSL_ALLERGY_ENDPOINT'),
     'patient_endpoint' => env('SI_DSL_PATIENT_ENDPOINT'),
+    'admission_endpoint' => env('SI_DSL_ADMISSION_ENDPOINT'),
 ];

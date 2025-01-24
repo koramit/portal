@@ -185,7 +185,7 @@ class PatientFHIR
                 if (array_key_exists('telecom', $contact)) {
                     $contactText .= (' ' . $contact['telecom']['value'] ?? '');
                 }
-                
+
                 $altContact[] = trim($contactText);
             }
         }
@@ -238,5 +238,79 @@ class PatientFHIR
         $this->removeSensitiveData($patient);
 
         return $patient;
+    }
+
+    public function getAdmission(int $an, bool $raw, bool $withSensitiveInfo): array
+    {
+        $body = ['request' => ['_format' => 'json', 'subsystem' => 'SYS_1', 'EpisodeNumber' => (string) $an]];
+        try {
+            $response = Http::withOptions(['verify' => false])
+                ->get(config('si_dsl.proxy_url'), [
+                    'url' => config('si_dsl.admission_endpoint'),
+                    'headers' => config('si_dsl.headers'),
+                    'body' => $body,
+                ]);
+        } catch (Exception $e) {
+            Log::error('admission-fhir@'.$e->getMessage());
+
+            return [
+                'ok' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
+
+        if ($response->status() !== 200) {
+            return [
+                'ok' => true,
+                'found' => false,
+                'status' => $response->status(),
+                'body' => $response->body(),
+            ];
+        }
+
+        $response = $response->json();
+        $resource = $response['Response'][0];
+        if (array_key_exists('Response_No', $resource)) {
+            return [
+                'ok' => true,
+                'found' => false,
+            ];
+        }
+
+        if ($raw && $withSensitiveInfo) {
+            return [
+                'ok' => true,
+                'found' => true,
+                'response' => $response,
+            ];
+        }
+
+        $patient = $this->getPatient('hn', $resource['HospitalNumber'], false, $withSensitiveInfo);
+        $episode = $resource['Episode'][0];
+
+        return [
+            'ok' => true,
+            'found' => true,
+            'alive' => $patient['alive'],
+            'hn' => $patient['hn'],
+            'an' => $an,
+            'dob' => $withSensitiveInfo ? $patient['dob'] : null,
+            'age_at_admitted' => $episode['PatientAge'],
+            'gender' => $patient['gender'],
+            'patient_name' => $patient['patient_name'],
+            'patient' => $patient,
+            'ward_name' => $episode['AdmittedWardName'],
+            'ward_name_short' => null,
+            'admitted_at' => $episode['AdmittedDateTime'],
+            'discharged_at' => $episode['DischargeDateTime'],
+            'attending_admit' => $episode['PhysicianAdmitName'],
+            'attending_license_no_admit' => $episode['PhysicianAdmitCode'],
+            'attending_master' => $episode['PhysicianMasterName'],
+            'attending_license_no_master' => $episode['PhysicianMasterCode'],
+            'discharge_type' => $episode['DischargeTypeLongName'] ? strtoupper($episode['DischargeTypeLongName']) : null,
+            'discharge_status' => $episode['DischargeStatusLongName'] ? strtoupper($episode['DischargeStatusLongName']) : null,
+            'department' => null,
+            'division' => null,
+        ];
     }
 }
