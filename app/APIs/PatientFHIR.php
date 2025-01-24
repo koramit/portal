@@ -183,7 +183,7 @@ class PatientFHIR
                     $contactText .= (' ' . $contact['address']['text'] ?? '');
                 }
                 if (array_key_exists('telecom', $contact)) {
-                    $contactText .= (' ' . $contact['telecom']['value'] ?? '');
+                    $contactText .= (' ' . $contact['telecom']['text'] ?? '');
                 }
 
                 $altContact[] = trim($contactText);
