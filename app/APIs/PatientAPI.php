@@ -5,12 +5,13 @@ namespace App\APIs;
 use App\Contracts\AdmissionAPI;
 use App\Contracts\PatientAPI as PatientAPIContract;
 use App\Traits\CurlExecutable;
+use App\Traits\PatientSensitiveDataRemovable;
 use Illuminate\Support\Facades\Cache;
 use Throwable;
 
 class PatientAPI implements AdmissionAPI, PatientAPIContract
 {
-    use CurlExecutable;
+    use CurlExecutable, PatientSensitiveDataRemovable;
 
     protected array $patient;
 
@@ -96,20 +97,8 @@ class PatientAPI implements AdmissionAPI, PatientAPIContract
         $patient['age'] = $patient['dob']
             ? (int) abs(now()->diffInYears($patient['dob']))
             : null;
-        $patient['dob'] = null;
-        $patient['document_id'] = null;
-        $patient['race'] = null;
-        $patient['nation'] = null;
-        $patient['tel_no'] = null;
-        $patient['spouse'] = null;
-        $patient['address'] = null;
-        $patient['subdistrict'] = null;
-        $patient['district'] = null;
-        $patient['postcode'] = null;
-        $patient['province'] = null;
-        $patient['insurance_name'] = null;
-        $patient['marital_status'] = null;
-        $patient['alternative_contact'] = null;
+
+        $this->removeSensitiveData($patient);
 
         return $patient;
     }

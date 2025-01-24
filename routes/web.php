@@ -108,5 +108,18 @@ Route::post('/test-dsl/patient-allergy', function () {
     return (new App\APIs\PatientAllergyAPI())(request()->hn);
 });
 Route::post('/test-dsl/dsl/patient', function () {
-    return (new App\APIs\PatientFHIR())->getPatient(request()->key_name, request()->key_value, request()->raw);
+    return (new App\APIs\PatientFHIR())->getPatient(
+        request()->key_name,
+        request()->key_value,
+        request()->raw,
+        false
+    );
+});
+Route::post('/test-dsl/dsl/patient-with-sensitive-data', function () {
+    return (new App\APIs\PatientFHIR())->getPatient(
+        request()->key_name,
+        request()->key_value,
+        request()->raw,
+        true
+    );
 });
