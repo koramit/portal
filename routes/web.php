@@ -165,3 +165,10 @@ Route::post('/test-dsl/dsl/patient-recently-admission-with-sensitive-data', func
         true
     );
 });
+Route::post('/test-dsl/dsl/admission-pagination', function () {
+    return (new App\APIs\PatientFHIR())->getAdmissionPagination(
+        request()->date_ref,
+        request()->page_no,
+        request()->item_per_page,
+    );
+});

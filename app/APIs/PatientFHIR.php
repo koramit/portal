@@ -341,6 +341,21 @@ class PatientFHIR
         }
     }
 
+    public function getAdmissionPagination(string $dateRef, int $pageNo, int $itemPerPage): array
+    {
+        $body = [
+            'request' => [
+                '_format' => 'json',
+                'subsystem' => 'SYS_1',
+                'AdmittedDateTime' => $dateRef,
+                'Pagenumber' => $pageNo,
+                'Rowspage' => $itemPerPage,
+            ]
+        ];
+
+        return $this->callAdmissionDSL($body, 'admission-pagination');
+    }
+
     protected function callAdmissionDSL(array $body, string $debugLabel): array
     {
         try {
