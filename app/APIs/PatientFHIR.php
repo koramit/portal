@@ -276,7 +276,7 @@ class PatientFHIR
         }
 
         // double check DSL result
-        $firstEpisode = $response['response']['Response'][0]['episode'][0];
+        $firstEpisode = $response['response']['Response'][0]['Episode'][0];
         if ($firstEpisode['EpisodeNumber'] === '') {
             $response['found'] = false;
         }
