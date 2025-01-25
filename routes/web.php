@@ -151,3 +151,17 @@ Route::post('/test-dsl/dsl/patient-admissions-with-sensitive-data', function () 
         true
     );
 });
+Route::post('/test-dsl/dsl/patient-recently-admission', function () {
+    return (new App\APIs\PatientFHIR())->getPatientRecentlyAdmission(
+        request()->hn,
+        request()->raw,
+        false
+    );
+});
+Route::post('/test-dsl/dsl/patient-recently-admission-with-sensitive-data', function () {
+    return (new App\APIs\PatientFHIR())->getPatientRecentlyAdmission(
+        request()->hn,
+        request()->raw,
+        true
+    );
+});

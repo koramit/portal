@@ -4,6 +4,7 @@ namespace App\APIs;
 
 use App\Traits\PatientSensitiveDataRemovable;
 use Exception;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -253,7 +254,7 @@ class PatientFHIR
             return $response;
         }
 
-        $resource = $response['Response'][0];
+        $resource = $response['response']['Response'][0];
         $patient = $this->getPatient('hn', $resource['HospitalNumber'], false, $withSensitiveInfo);
         if (!$patient['ok'] || !$patient['found']) {
             return $patient;
@@ -274,15 +275,27 @@ class PatientFHIR
             return $response;
         }
 
+        // double check DSL result
+        $firstEpisode = $response['response']['Response'][0]['episode'][0];
+        if ($firstEpisode['EpisodeNumber'] === '') {
+            $response['found'] = false;
+        }
+
         if ($raw && $withSensitiveInfo) {
             return $response;
         }
 
-        $resource = $response['response']['Response'][0];
         $patient = $this->getPatient('hn', (string) $hn, false, $withSensitiveInfo);
         if (!$patient['ok'] || !$patient['found']) {
             return $patient;
         }
+        if ($response['found'] === false) {
+            $response['patient'] = $patient;
+
+            return $response;
+        }
+
+        $resource = $response['response']['Response'][0];
         $admissions = [];
         foreach ($resource['Episode'] as $episode) {
             $admissions[] = $this->transformEpisode($episode, $patient, $withSensitiveInfo);
@@ -294,6 +307,41 @@ class PatientFHIR
             'patient' => $patient,
             'admissions' => $admissions,
         ];
+    }
+
+    public function getPatientRecentlyAdmission(int $hn, bool $raw, bool $withSensitiveInfo): array
+    {
+        $cacheKey = 'recently-an-of-hn-'.$hn;
+        if ($an = Cache::get($cacheKey)) {
+            return $this->getAdmission($an, $raw, $withSensitiveInfo);
+        }
+
+        if ($raw && $withSensitiveInfo) {
+            $admissions = $this->getPatientAdmissions($hn, true, true);
+            if (!$admissions['found']) {
+                return $admissions;
+            }
+            $admissions['response']['Response'][0]['episode'] = [$admissions['response']['Response'][0]['episode'][0]];
+
+            return $admissions;
+        }
+
+        $admissions = $this->getPatientAdmissions($hn, false, $withSensitiveInfo);
+
+
+        if ($admissions['found'] ?? false) {
+            $admission = collect($admissions['admissions'])->last();
+            $admission['patient'] = $admissions['patient'];
+
+            return $admission;
+        } else {
+            $admissions['patient'] = $this->getPatient('hn', $hn, false, $withSensitiveInfo);
+
+            return $admissions;
+        }
+
+
+
     }
 
     protected function callAdmissionDSL(array $body, string $debugLabel): array
