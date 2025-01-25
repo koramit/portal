@@ -321,17 +321,17 @@ class PatientFHIR
             if (!$admissions['found']) {
                 return $admissions;
             }
-            $admissions['response']['Response'][0]['episode'] = [$admissions['response']['Response'][0]['episode'][0]];
+            $admissions['response']['Response'][0]['Episode'] = [$admissions['response']['Response'][0]['Episode'][0]];
+            Cache::put($cacheKey, $admissions['response']['Response'][0]['Episode'][0]['EpisodeNumber'], 600);
 
             return $admissions;
         }
 
         $admissions = $this->getPatientAdmissions($hn, false, $withSensitiveInfo);
-
-
         if ($admissions['found'] ?? false) {
-            $admission = collect($admissions['admissions'])->last();
+            $admission = array_shift($admissions['admissions']);
             $admission['patient'] = $admissions['patient'];
+            Cache::put($cacheKey, $admission['EpisodeNumber'], 600);
 
             return $admission;
         } else {
@@ -339,9 +339,6 @@ class PatientFHIR
 
             return $admissions;
         }
-
-
-
     }
 
     protected function callAdmissionDSL(array $body, string $debugLabel): array
