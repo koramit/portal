@@ -195,16 +195,16 @@ class PatientAPI implements AdmissionAPI, PatientAPIContract
      */
     public function getPatientRecentlyAdmission(int $hn, bool $withSensitiveInfo): array
     {
-        $cacheKey = 'recently-admit-'.$hn;
-        if ($admission = Cache::get($cacheKey)) {
-            return $admission;
+        $cacheKey = 'recently-an-of-hn-'.$hn;
+        if ($an = Cache::get($cacheKey)) {
+            return $this->getAdmission($an, $withSensitiveInfo);
         }
 
         $admissions = $this->getPatientAdmissions($hn, $withSensitiveInfo);
         if ($admissions['found'] ?? false) {
             $admission = collect($admissions['admissions'])->last();
             $admission['patient'] = $admissions['patient'];
-            Cache::put($cacheKey, $admission, 600);
+            Cache::put($cacheKey, $admission['an'], 600);
 
             return $admission;
         } else {
