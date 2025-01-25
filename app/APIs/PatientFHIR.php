@@ -331,7 +331,7 @@ class PatientFHIR
         if ($admissions['found'] ?? false) {
             $admission = array_shift($admissions['admissions']);
             $admission['patient'] = $admissions['patient'];
-            Cache::put($cacheKey, $admission['EpisodeNumber'], 600);
+            Cache::put($cacheKey, $admission['an'], 600);
 
             return $admission;
         } else {
