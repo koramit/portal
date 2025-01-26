@@ -7,7 +7,12 @@ return [
         'Content-Type' => 'application/json',
         'x-consumer-id' => env('SI_DSL_CONSUMER_ID'),
     ],
+    'headers_fhir' => [
+        'Content-Type' => 'application/json+fhir',
+        'x-consumer-id' => env('SI_DSL_CONSUMER_ID'),
+    ],
     'allergy_endpoint' => env('SI_DSL_ALLERGY_ENDPOINT'),
     'patient_endpoint' => env('SI_DSL_PATIENT_ENDPOINT'),
     'admission_endpoint' => env('SI_DSL_ADMISSION_ENDPOINT'),
+    'appointment_endpoint' => env('SI_DSL_APPOINTMENT_ENDPOINT'),
 ];

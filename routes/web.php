@@ -172,3 +172,11 @@ Route::post('/test-dsl/dsl/admission-pagination', function () {
         request()->items_per_page,
     );
 });
+Route::post('/test-dsl/dsl/patient-appointment', function () {
+    return (new App\APIs\PatientAppointmentAPI())(
+        request()->key_name,
+        request()->key_value,
+        request()->date_start,
+        request()->date_end ?? null,
+    );
+});
