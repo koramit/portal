@@ -341,7 +341,7 @@ class PatientFHIR
         }
     }
 
-    public function getAdmissionPagination(string $dateRef, int $pageNo, int $itemPerPage): array
+    public function getAdmissionPagination(string $dateRef, int $pageNo, int $itemsPerPage): array
     {
         $body = [
             'request' => [
@@ -349,7 +349,7 @@ class PatientFHIR
                 'subsystem' => 'SYS_1',
                 'AdmittedDateTime' => $dateRef,
                 'Pagenumber' => $pageNo,
-                'Rowspage' => $itemPerPage,
+                'Rowspage' => $itemsPerPage,
             ]
         ];
 

@@ -7,6 +7,10 @@ use App\Http\Controllers\API\AuthenticateUserADFSController;
 use App\Http\Controllers\API\AuthenticateUserController;
 use App\Http\Controllers\API\COVID19PCRLabController;
 use App\Http\Controllers\API\COVID19VaccinationController;
+use App\Http\Controllers\API\DSLAdmissionController;
+use App\Http\Controllers\API\DSLPatientAdmissionController;
+use App\Http\Controllers\API\DSLPatientController;
+use App\Http\Controllers\API\DSLPatientRecentlyAdmissionController;
 use App\Http\Controllers\API\GetUserController;
 use App\Http\Controllers\API\ItemizeController;
 use App\Http\Controllers\API\LabPendingReportController;
@@ -121,4 +125,35 @@ Route::middleware('auth:sanctum')
         Route::post('/lab-from-item-all', [LabResultController::class, 'fromItemCodeAllResult'])
             ->middleware('ability:lab:results')
             ->name('api.lab-from-item-all');
+
+        Route::post('/dsl/patient', DSLPatientController::class)
+            ->middleware('ability:patient:data')
+            ->name('api.dsl.patient');
+        Route::post('/dsl/patient-with-sensitive-data', DSLPatientController::class)
+            ->middleware('abilities:patient:data,patient:sensitive-data')
+            ->name('api.dsl.patient-with-sensitive-data');
+
+        Route::post('/dsl/patient-admissions', DSLPatientAdmissionController::class)
+            ->middleware('ability:patient:admissions')
+            ->name('api.dsl.patient-admissions');
+        Route::post('/dsl/patient-admissions-with-sensitive-data', DSLPatientAdmissionController::class)
+            ->middleware('abilities:patient:admissions,patient:sensitive-data')
+            ->name('api.dsl.patient-admissions-with-sensitive-data');
+
+        Route::post('/dsl/patient-recently-admission', DSLPatientRecentlyAdmissionController::class)
+            ->middleware('ability:patient:recently-admission')
+            ->name('api.dsl.patient-recently-admission');
+        Route::post('/dsl/patient-recently-admission-with-sensitive-data', DSLPatientRecentlyAdmissionController::class)
+            ->middleware('abilities:patient:recently-admission,patient:sensitive-data')
+            ->name('api.dls.patient-recently-admission-with-sensitive-data');
+
+        Route::post('/dsl/admission', [DSLAdmissionController::class, 'show'])
+            ->middleware('ability:admission:data')
+            ->name('api.dsl.admission');
+        Route::post('/dsl/admission-with-sensitive-data', [DSLAdmissionController::class, 'show'])
+            ->middleware('abilities:admission:data,patient:sensitive-data')
+            ->name('api.dsl.admission-with-sensitive-data');
+        Route::post('/dsl/admission', [DSLAdmissionController::class, 'index'])
+            ->middleware('abilities:admission:data,patient:sensitive-data')
+            ->name('api.dsl.admission');
     });
