@@ -16,7 +16,7 @@ class PatientAppointmentAPI
         } elseif ($keyName === 'clinic') {
             $body['service-type-reference'] = $keyValue;
         } elseif ($keyName === 'doctor') {
-            $body['actor'] = $keyValue;
+            $body['actor'] = "DR$keyValue";
         }
 
         $body['date'] = $dateEnd
