@@ -18,6 +18,7 @@ use App\Http\Controllers\API\LabRecentlyOrderController;
 use App\Http\Controllers\API\LabResultController;
 use App\Http\Controllers\API\PatientAdmissionController;
 use App\Http\Controllers\API\PatientAllergyController;
+use App\Http\Controllers\API\PatientAppointmentController;
 use App\Http\Controllers\API\PatientController;
 use App\Http\Controllers\API\PatientRecentlyAdmissionController;
 use App\Http\Controllers\API\WardAdmissionController;
@@ -161,4 +162,8 @@ Route::middleware('auth:sanctum')
         Route::post('/patient-allergy', PatientAllergyController::class)
             ->middleware('ability:patient:allergy')
             ->name('api.patient-allergy');
+
+        Route::post('/patient-appointment', PatientAppointmentController::class)
+            ->middleware('ability:patient:appointment')
+            ->name('api.patient-appointment');
     });
