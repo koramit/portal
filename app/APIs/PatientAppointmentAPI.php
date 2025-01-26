@@ -20,7 +20,7 @@ class PatientAppointmentAPI
         }
 
         $body['date'] = $dateEnd
-            ? ['ge' => $dateStart, 'le' => $dateEnd]
+            ? ["ge$dateStart", "le$dateEnd"]
             : "eq$dateStart";
 
         try {
