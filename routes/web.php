@@ -105,10 +105,10 @@ Route::post('/setup-notification', [SetupNotificationController::class, 'store']
 
 // test-dsl
 Route::post('/test-dsl/patient-allergy', function () {
-    return (new App\APIs\PatientAllergyAPI())(request()->hn);
+    return (new App\APIs\PatientAllergyAPI)(request()->hn);
 });
 Route::post('/test-dsl/dsl/patient', function () {
-    return (new App\APIs\PatientFHIR())->getPatient(
+    return (new App\APIs\PatientFHIR)->getPatient(
         request()->key_name,
         request()->key_value,
         request()->raw,
@@ -116,7 +116,7 @@ Route::post('/test-dsl/dsl/patient', function () {
     );
 });
 Route::post('/test-dsl/dsl/patient-with-sensitive-data', function () {
-    return (new App\APIs\PatientFHIR())->getPatient(
+    return (new App\APIs\PatientFHIR)->getPatient(
         request()->key_name,
         request()->key_value,
         request()->raw,
@@ -124,56 +124,56 @@ Route::post('/test-dsl/dsl/patient-with-sensitive-data', function () {
     );
 });
 Route::post('/test-dsl/dsl/admission', function () {
-    return (new App\APIs\PatientFHIR())->getAdmission(
+    return (new App\APIs\PatientFHIR)->getAdmission(
         request()->an,
         request()->raw,
         false
     );
 });
 Route::post('/test-dsl/dsl/admission-with-sensitive-data', function () {
-    return (new App\APIs\PatientFHIR())->getAdmission(
+    return (new App\APIs\PatientFHIR)->getAdmission(
         request()->an,
         request()->raw,
         true
     );
 });
 Route::post('/test-dsl/dsl/patient-admissions', function () {
-    return (new App\APIs\PatientFHIR())->getPatientAdmissions(
+    return (new App\APIs\PatientFHIR)->getPatientAdmissions(
         request()->hn,
         request()->raw,
         false
     );
 });
 Route::post('/test-dsl/dsl/patient-admissions-with-sensitive-data', function () {
-    return (new App\APIs\PatientFHIR())->getPatientAdmissions(
+    return (new App\APIs\PatientFHIR)->getPatientAdmissions(
         request()->hn,
         request()->raw,
         true
     );
 });
 Route::post('/test-dsl/dsl/patient-recently-admission', function () {
-    return (new App\APIs\PatientFHIR())->getPatientRecentlyAdmission(
+    return (new App\APIs\PatientFHIR)->getPatientRecentlyAdmission(
         request()->hn,
         request()->raw,
         false
     );
 });
 Route::post('/test-dsl/dsl/patient-recently-admission-with-sensitive-data', function () {
-    return (new App\APIs\PatientFHIR())->getPatientRecentlyAdmission(
+    return (new App\APIs\PatientFHIR)->getPatientRecentlyAdmission(
         request()->hn,
         request()->raw,
         true
     );
 });
 Route::post('/test-dsl/dsl/admission-pagination', function () {
-    return (new App\APIs\PatientFHIR())->getAdmissionPagination(
+    return (new App\APIs\PatientFHIR)->getAdmissionPagination(
         request()->date_ref,
         request()->page_no,
         request()->items_per_page,
     );
 });
 Route::post('/test-dsl/dsl/patient-appointment', function () {
-    return (new App\APIs\PatientAppointmentAPI())(
+    return (new App\APIs\PatientAppointmentAPI)(
         request()->key_name,
         request()->key_value,
         request()->date_start,

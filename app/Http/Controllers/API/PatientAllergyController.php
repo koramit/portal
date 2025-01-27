@@ -13,7 +13,7 @@ class PatientAllergyController
     public function __invoke(Request $request, PatientAllergyAPI $api)
     {
         $validated = $request->validate([
-            'hn' => ['required', 'digits:8']
+            'hn' => ['required', 'digits:8'],
         ]);
 
         $data = $api($validated['hn']);

@@ -25,7 +25,7 @@ class DeployPatientAllergyAPI extends Command
     /**
      * Execute the console command.
      */
-    public function handle():void
+    public function handle(): void
     {
         if (Ability::query()->where('name', 'create_patient_allergy_app')->first()) {
             return;

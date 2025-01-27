@@ -69,7 +69,7 @@ class PatientFHIR
             $alive = false;
             $dateDeath = $resource['deceasedDateTime'];
         } elseif (array_key_exists('deceasedBoolean', $resource)) {
-            $alive = !$resource['deceasedBoolean'];
+            $alive = ! $resource['deceasedBoolean'];
         } else {
             $alive = true;
         }
@@ -148,12 +148,12 @@ class PatientFHIR
 
         $presentAddress = $resource['address'][0] ?? [];
         $address = trim(implode(' ', $presentAddress['line'] ?? []));
-        $subdistrict =  $presentAddress['city'] ?? null;
-        $district =  $presentAddress['district'] ?? null;
-        $province =  $presentAddress['state'] ?? null;
-        $postcode =  $presentAddress['postalCode'] ?? null;
+        $subdistrict = $presentAddress['city'] ?? null;
+        $district = $presentAddress['district'] ?? null;
+        $province = $presentAddress['state'] ?? null;
+        $postcode = $presentAddress['postalCode'] ?? null;
 
-        $maritalStatus =  null;
+        $maritalStatus = null;
         if (array_key_exists('maritalStatus', $resource)) {
             foreach ($resource['maritalStatus']['coding'] as $code) {
                 if ($code['system'] === 'http://si.mahidol.ac.th/eHIS/MP_PATIENT') {
@@ -180,14 +180,14 @@ class PatientFHIR
                 }
                 $contactText .= $relate;
                 if (array_key_exists('name', $contact)) {
-                    $contactText .= (' ' . $contact['name']['text'] ?? '');
+                    $contactText .= (' '.$contact['name']['text'] ?? '');
                 }
                 if (array_key_exists('address', $contact)) {
-                    $contactText .= (' ' . $contact['address']['text'] ?? '');
+                    $contactText .= (' '.$contact['address']['text'] ?? '');
                 }
                 if (array_key_exists('telecom', $contact)) {
                     foreach ($contact['telecom'] as $telecom) {
-                        $contactText .= (' ' . $telecom['value'] ?? '');
+                        $contactText .= (' '.$telecom['value'] ?? '');
                     }
                 }
 
@@ -256,7 +256,7 @@ class PatientFHIR
 
         $resource = $response['response']['Response'][0];
         $patient = $this->getPatient('hn', $resource['HospitalNumber'], false, $withSensitiveInfo);
-        if (!$patient['ok'] || !$patient['found']) {
+        if (! $patient['ok'] || ! $patient['found']) {
             return $patient;
         }
         $episode = $resource['Episode'][0];
@@ -271,7 +271,7 @@ class PatientFHIR
     {
         $body = ['request' => ['_format' => 'json', 'subsystem' => 'SYS_1', 'HospitalNumber' => (string) $hn]];
         $response = $this->callAdmissionDSL($body, 'patient-admissions-dsl');
-        if (!$response['ok'] || !$response['found']) {
+        if (! $response['ok'] || ! $response['found']) {
             return $response;
         }
 
@@ -286,7 +286,7 @@ class PatientFHIR
         }
 
         $patient = $this->getPatient('hn', (string) $hn, false, $withSensitiveInfo);
-        if (!$patient['ok'] || !$patient['found']) {
+        if (! $patient['ok'] || ! $patient['found']) {
             return $patient;
         }
         if ($response['found'] === false) {
@@ -318,7 +318,7 @@ class PatientFHIR
 
         if ($raw && $withSensitiveInfo) {
             $admissions = $this->getPatientAdmissions($hn, true, true);
-            if (!$admissions['found']) {
+            if (! $admissions['found']) {
                 return $admissions;
             }
             $admissions['response']['Response'][0]['Episode'] = [$admissions['response']['Response'][0]['Episode'][0]];
@@ -350,7 +350,7 @@ class PatientFHIR
                 'AdmittedDateTime' => $dateRef,
                 'Pagenumber' => $pageNo,
                 'Rowspage' => $itemsPerPage,
-            ]
+            ],
         ];
 
         return $this->callAdmissionDSL($body, 'admission-pagination');

@@ -14,7 +14,7 @@ class DSLPatientRecentlyAdmissionController
     {
         $validated = $request->validate([
             'hn' => ['required', 'digits:8'],
-            'raw' => ['sometimes', 'bool']
+            'raw' => ['sometimes', 'bool'],
         ]);
 
         $routeName = $request->route()->getName();

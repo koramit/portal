@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Log;
 
 class PatientAllergyAPI implements \App\Contracts\PatientAllergyAPI
 {
-
     public function __invoke(int|string $hn): array
     {
         try {
