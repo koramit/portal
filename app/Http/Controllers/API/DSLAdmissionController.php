@@ -38,7 +38,7 @@ class DSLAdmissionController
             'items_per_page' => ['sometimes', 'integer'],
         ]);
 
-        $data = $api->getAdmissionPagination($validated['dare_ref'], $validated['page_no'], $validated['items_per_page'] ?? 15);
+        $data = $api->getAdmissionPagination($validated['date_ref'], $validated['page_no'], $validated['items_per_page'] ?? 15);
         $this->log(
             $request->bearerToken(),
             $validated,
