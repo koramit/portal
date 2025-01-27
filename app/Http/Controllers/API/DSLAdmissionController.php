@@ -33,7 +33,7 @@ class DSLAdmissionController
     public function index(Request $request, PatientFHIR $api)
     {
         $validated = $request->validate([
-            'dare_ref' => ['required', 'date'],
+            'date_ref' => ['required', 'date'],
             'page_no' => ['required', 'integer'],
             'items_per_page' => ['sometimes', 'integer'],
         ]);
