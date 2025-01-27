@@ -19,7 +19,7 @@ class DSLAdmissionController
 
         $routeName = $request->route()->getName();
         $withSensitiveInfo = $routeName === 'api.dsl.admission-with-sensitive-data';
-        $data = $api->getAdmission($validated['an'], $validated['raw'], $withSensitiveInfo);
+        $data = $api->getAdmission($validated['an'], $validated['raw'] ?? false, $withSensitiveInfo);
         $this->log(
             $request->bearerToken(),
             $validated,
@@ -38,7 +38,7 @@ class DSLAdmissionController
             'items_per_page' => ['sometimes', 'integer'],
         ]);
 
-        $data = $api->getAdmission($validated['dare_ref'], $validated['page_no'], $validated['items_per_page'] ?? 15);
+        $data = $api->getAdmissionPagination($validated['dare_ref'], $validated['page_no'], $validated['items_per_page'] ?? 15);
         $this->log(
             $request->bearerToken(),
             $validated,
