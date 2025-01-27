@@ -7,11 +7,15 @@ use App\Traits\CurlExecutable;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class UserAPI implements UserAPIContract
 {
     use CurlExecutable;
 
+    /**
+     * @throws Throwable
+     */
     public function getUserByLogin(string $login, bool $withSensitiveInfo): array
     {
         $headers = [
@@ -44,6 +48,9 @@ class UserAPI implements UserAPIContract
         ];
     }
 
+    /**
+     * @throws Throwable
+     */
     public function getUserById(int|string $id, bool $withSensitiveInfo): array
     {
         $login = $this->getStatus($id);
@@ -55,6 +62,9 @@ class UserAPI implements UserAPIContract
         return $this->getUserByLogin($login['login'], $withSensitiveInfo);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function authenticate(string $login, string $password, bool $withSensitiveInfo): array
     {
         $headers = [
@@ -134,24 +144,15 @@ class UserAPI implements UserAPIContract
         ];
     }
 
+    /**
+     * @throws Throwable
+     */
     protected function getProfile(int|string $id): array
     {
-        $functionName = 'SiITCheckUser';
-        $action = 'http://tempuri.org/'.$functionName;
+        $action = 'http://tempuri.org/SiITCheckUser';
+        $SOAPStr = view('siit_soap.SiITCheckUser')->with(['id' => $id])->render();
 
-        $strSOAP = '<?xml version="1.0" encoding="utf-8"?>';
-        $strSOAP .= '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">';
-        $strSOAP .= '<soap:Body>';
-        $strSOAP .= '<'.$functionName.' xmlns="http://tempuri.org/">';
-        $strSOAP .= '<Userid>'.$id.'</Userid>';
-        $strSOAP .= '<Password>password</Password>';
-        $strSOAP .= '<SystemID>1</SystemID>';
-        $strSOAP .= '</'.$functionName.'>';
-        $strSOAP .= '</soap:Body>';
-        $strSOAP .= '</soap:Envelope>';
-
-        // make request and check the response.
-        if (($response = $this->executeCurl($strSOAP, $action, config('simrs.user_url'))) === false) {
+        if (($response = $this->executeCurl($SOAPStr, $action, config('simrs.user_url'))) === false) {
             return [
                 'ok' => false,
                 'status' => 500,
@@ -160,10 +161,8 @@ class UserAPI implements UserAPIContract
             ];
         }
 
-        $response = str_replace('&#x', '', $response);
         $xml = simplexml_load_string($response);
         $namespaces = $xml->getNamespaces(true);
-
         $response = $xml->children($namespaces['soap'])
             ->Body
             ->children($namespaces[''])
