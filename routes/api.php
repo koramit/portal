@@ -155,9 +155,9 @@ Route::middleware('auth:sanctum')
         Route::post('/dsl/admission-with-sensitive-data', [DSLAdmissionController::class, 'show'])
             ->middleware('abilities:admission:data,patient:sensitive-data')
             ->name('api.dsl.admission-with-sensitive-data');
-        Route::post('/dsl/admission', [DSLAdmissionController::class, 'index'])
+        Route::post('/dsl/admission-pagination', [DSLAdmissionController::class, 'index'])
             ->middleware('abilities:admission:data,patient:sensitive-data')
-            ->name('api.dsl.admission');
+            ->name('api.dsl.admission-with-sensitive-data');
 
         Route::post('/patient-allergy', PatientAllergyController::class)
             ->middleware('ability:patient:allergy')
