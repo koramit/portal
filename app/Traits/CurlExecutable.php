@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use Illuminate\Support\Facades\Log;
+
 trait CurlExecutable
 {
     protected function executeCurl($strSOAP, $action, $url): array|bool|string
@@ -14,7 +16,7 @@ trait CurlExecutable
         ];
 
         $ch = curl_init();
-        // curl_setopt($ch, CURLOPT_VERBOSE, true); // for debug
+        curl_setopt($ch, CURLOPT_VERBOSE, true); // for debug
         // curl_setopt($ch, CURLOPT_TIMEOUT, config('app.API_TIMEOUT'));
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
@@ -32,6 +34,8 @@ trait CurlExecutable
         curl_close($ch);
 
         if ($error) {
+            Log::error("cURL $url error: $error");
+
             return false;
         }
 
