@@ -22,6 +22,7 @@ class RoleUserService
         ['label' => 'Lab', 'name' => 'lab_developer'],
         ['label' => 'Patient Allergy', 'name' => 'patient_allergy_developer'],
         ['label' => 'Patient Appointment', 'name' => 'patient_appointment_developer'],
+        ['label' => 'Patient Medication', 'name' => 'patient_medication_developer'],
     ];
 
     const FORM_RULES = [
@@ -38,6 +39,7 @@ class RoleUserService
         'lab_developer' => ['sometimes', 'accepted'],
         'patient_allergy_developer' => ['sometimes', 'accepted'],
         'patient_appointment_developer' => ['sometimes', 'accepted'],
+        'patient_medication_developer' => ['sometimes', 'accepted'],
     ];
 
     const TOKEN_ABILITIES = [
@@ -58,6 +60,7 @@ class RoleUserService
         ['ability' => 'lab:results', 'name' => 'lab_results', 'label' => 'Lab results', 'can' => 'create_lab_app'],
         ['ability' => 'patient:allergy', 'name' => 'patient_allergy', 'label' => 'Patient allergy', 'can' => 'create_patient_allergy_app'],
         ['ability' => 'patient:appointment', 'name' => 'patient_appointment', 'label' => 'Patient appointment', 'can' => 'create_patient_appointment_app'],
+        ['ability' => 'patient:medication', 'name' => 'patient_medication', 'label' => 'Patient Medication', 'can' => 'create_patient_medication_app'],
     ];
 
     public function attachRoles(ServiceRequestForm $form): void
