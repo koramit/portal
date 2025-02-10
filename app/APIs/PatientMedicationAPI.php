@@ -62,7 +62,7 @@ class PatientMedicationAPI
             ]);
 
             return [
-                'category' => $validated['category'],
+                'category' => strtoupper($validated['category']),
                 'subject' => 'HN'.$validated['hn'],
                 '_maxresults' => (int) $validated['limit'],
                 '_sort' => $validated['asc'] ? 'whenHandOver' : '-whenHandOver',
@@ -77,7 +77,7 @@ class PatientMedicationAPI
         ]);
 
         $body = [
-            'category' => $validated['category'],
+            'category' => strtoupper($validated['category']),
             'subject' => 'HN'.$validated['hn'],
         ];
 
