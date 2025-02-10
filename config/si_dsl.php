@@ -16,4 +16,5 @@ return [
     'admission_endpoint' => env('SI_DSL_ADMISSION_ENDPOINT'),
     'appointment_endpoint' => env('SI_DSL_APPOINTMENT_ENDPOINT'),
     'medication_endpoint' => env('SI_DSL_MEDICATION_ENDPOINT'),
+    'encounter_endpoint' => env('SI_DSL_ENCOUNTER_ENDPOINT'),
 ];

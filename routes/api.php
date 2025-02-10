@@ -11,6 +11,7 @@ use App\Http\Controllers\API\DSLAdmissionController;
 use App\Http\Controllers\API\DSLPatientAdmissionController;
 use App\Http\Controllers\API\DSLPatientController;
 use App\Http\Controllers\API\DSLPatientRecentlyAdmissionController;
+use App\Http\Controllers\API\EncounterController;
 use App\Http\Controllers\API\GetUserController;
 use App\Http\Controllers\API\ItemizeController;
 use App\Http\Controllers\API\LabPendingReportController;
@@ -171,4 +172,8 @@ Route::middleware('auth:sanctum')
         Route::post('/patient-medication', PatientMedicationController::class)
             ->middleware('ability:patient:medication')
             ->name('api.patient-medication');
+
+        Route::post('/encounter', EncounterController::class)
+            ->middleware('ability:encounter:results')
+            ->name('api.encounter');
     });
