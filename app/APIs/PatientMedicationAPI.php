@@ -65,7 +65,7 @@ class PatientMedicationAPI
                 'category' => strtoupper($validated['category']),
                 'subject' => 'HN'.$validated['hn'],
                 '_maxresults' => (int) $validated['limit'],
-                '_sort' => $validated['asc'] ? 'whenHandOver' : '-whenHandOver',
+                '_sort' => $validated['asc'] ? 'whenHandedOver' : '-whenHandedOver',
             ];
         }
 
@@ -81,7 +81,7 @@ class PatientMedicationAPI
             'subject' => 'HN'.$validated['hn'],
         ];
 
-        $body['whenhandover'] = ! array_key_exists('date_end', $validated)
+        $body['whenhaneddover'] = ! array_key_exists('date_end', $validated)
             ? 'eq'.$validated['date_start']
             : ['ge'.$validated['date_start'], 'le'.$validated['date_end']];
 
