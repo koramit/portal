@@ -20,6 +20,7 @@ use App\Http\Controllers\API\PatientAdmissionController;
 use App\Http\Controllers\API\PatientAllergyController;
 use App\Http\Controllers\API\PatientAppointmentController;
 use App\Http\Controllers\API\PatientController;
+use App\Http\Controllers\API\PatientMedicationController;
 use App\Http\Controllers\API\PatientRecentlyAdmissionController;
 use App\Http\Controllers\API\WardAdmissionController;
 use Illuminate\Support\Facades\Route;
@@ -166,4 +167,8 @@ Route::middleware('auth:sanctum')
         Route::post('/patient-appointment', PatientAppointmentController::class)
             ->middleware('ability:patient:appointment')
             ->name('api.patient-appointment');
+
+        Route::post('/patient-medication', PatientMedicationController::class)
+            ->middleware('ability:patient:medication')
+            ->name('api.patient-medication');
     });
