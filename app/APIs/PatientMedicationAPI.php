@@ -81,7 +81,7 @@ class PatientMedicationAPI
             'subject' => 'HN'.$validated['hn'],
         ];
 
-        $body['whenhaneddover'] = ! array_key_exists('date_end', $validated)
+        $body['whenhandedover'] = ! array_key_exists('date_end', $validated)
             ? 'eq'.$validated['date_start']
             : ['ge'.$validated['date_start'], 'le'.$validated['date_end']];
 
