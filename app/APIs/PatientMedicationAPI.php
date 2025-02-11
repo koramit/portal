@@ -9,12 +9,15 @@ use Illuminate\Support\Facades\Validator;
 
 class PatientMedicationAPI
 {
+    const TIMEOUT_SECONDS = 60;
+
     public function __invoke(array $validated): array
     {
         $body = $this->getBody($validated);
 
         try {
             $response = Http::withOptions(['verify' => false])
+                ->timeout(static::TIMEOUT_SECONDS)
                 ->get(config('si_dsl.proxy_url'), [
                     'url' => config('si_dsl.medication_endpoint'),
                     'headers' => config('si_dsl.headers_fhir'),
