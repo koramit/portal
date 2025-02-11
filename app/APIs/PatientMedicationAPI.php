@@ -18,6 +18,7 @@ class PatientMedicationAPI
         try {
             $response = Http::withOptions(['verify' => false])
                 ->timeout(static::TIMEOUT_SECONDS)
+                ->acceptJson()
                 ->get(config('si_dsl.proxy_url'), [
                     'url' => config('si_dsl.medication_endpoint'),
                     'headers' => config('si_dsl.headers_fhir'),
