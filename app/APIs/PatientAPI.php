@@ -333,6 +333,20 @@ class PatientAPI implements AdmissionAPI, PatientAPIContract
         $result['department'] = $result['patient_dept_name'] ?? null;
         $result['division'] = $result['patient_sub_dept_name'] ?? null;
 
+        unset(
+            $result['return_code'],
+            $result['request_computer_name'],
+            $result['admission_date'],
+            $result['admission_time'],
+            $result['ward_brief_name'],
+            $result['refer_doctor_code'],
+            $result['doctor_name'],
+            $result['patient_dept'],
+            $result['patient_dept_name'],
+            $result['patient_sub_dept'],
+            $result['patient_sub_dept_name'],
+        );
+
         return $result;
     }
 
