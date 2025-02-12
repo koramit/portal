@@ -338,6 +338,8 @@ class PatientAPI implements AdmissionAPI, PatientAPIContract
             $result['request_computer_name'],
             $result['discharge_date'],
             $result['discharge_time'],
+            $result['discharge_type_name'],
+            $result['discharge_status_name'],
             $result['admission_date'],
             $result['admission_time'],
             $result['ward_brief_name'],
