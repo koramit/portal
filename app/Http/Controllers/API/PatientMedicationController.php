@@ -20,6 +20,7 @@ class PatientMedicationController
             'hn' => ['sometimes', 'digits:8'],
             'limit' => ['sometimes', 'integer', 'min:1', 'max:100'],
             'asc' => ['sometimes', 'boolean'],
+            'request' => ['sometimes', 'array'],
         ]);
 
         $data = $api($validated);

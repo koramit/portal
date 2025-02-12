@@ -49,6 +49,10 @@ class EncounterAPI
 
     protected function getBody(array $validated): array
     {
+        if (array_key_exists('request', $validated)) {
+            return $validated['request'];
+        }
+
         if (array_key_exists('id', $validated)) {
             return ['identifier' => $validated['id']];
         }

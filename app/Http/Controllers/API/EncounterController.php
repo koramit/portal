@@ -17,8 +17,9 @@ class EncounterController
             'date_start' => ['sometimes', 'date'],
             'date_end' => ['sometimes', 'date'],
             'status' => ['sometimes', 'in:finished,cancelled,in-progress'],
-            'id' => ['sometimes', 'url'],
-            'part_of' => ['sometimes', 'url'],
+            'id' => ['sometimes', 'string'],
+            'part_of' => ['sometimes', 'string'],
+            'request' => ['sometimes', 'array'],
         ]);
 
         $data = $api($validated);
