@@ -336,6 +336,8 @@ class PatientAPI implements AdmissionAPI, PatientAPIContract
         unset(
             $result['return_code'],
             $result['request_computer_name'],
+            $result['discharge_date'],
+            $result['discharge_time'],
             $result['admission_date'],
             $result['admission_time'],
             $result['ward_brief_name'],
