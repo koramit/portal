@@ -54,7 +54,7 @@ class PatientMedicationAPI
     protected function getBody(array $validated): array
     {
         if (array_key_exists('request', $validated)) {
-            return $validated['encounter'];
+            return $validated['request'];
         }
 
         if (array_key_exists('encounter', $validated)) {
