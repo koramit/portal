@@ -29,8 +29,8 @@ class AdmissionManager
             $admission->attending_staff_id = $staff->id;
             $admission->admitted_at = $data['admitted_at'];
             $admission->discharged_at = $data['discharged_at'];
-            $admission->discharge_type_name = $data['discharge_type_name'];
-            $admission->discharge_status_name = $data['discharge_status_name'];
+            $admission->discharge_type_name = $data['discharge_type'];
+            $admission->discharge_status_name = $data['discharge_status'];
             $admission->checked_at = now();
             $admission->save();
 
@@ -46,8 +46,8 @@ class AdmissionManager
         $admission->gender = $data['gender'] === 'female' ? 1 : 2;
         $admission->admitted_at = $data['admitted_at'];
         $admission->discharged_at = $data['discharged_at'];
-        $admission->discharge_type_name = $data['discharge_type_name'];
-        $admission->discharge_status_name = $data['discharge_status_name'];
+        $admission->discharge_type_name = $data['discharge_type'];
+        $admission->discharge_status_name = $data['discharge_status'];
 
         $admission->ward_id = $ward->id;
         $admission->attending_staff_id = $staff->id;
