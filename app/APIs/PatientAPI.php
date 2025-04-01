@@ -27,6 +27,7 @@ class PatientAPI implements AdmissionAPI, PatientAPIContract
      */
     public function getPatient(int $hn, bool $withSensitiveInfo): array
     {
+        return (new PatientFHIR)->getPatient('hn', $hn, false, $withSensitiveInfo);
         $action = 'http://tempuri.org/SearchPatientDataDescriptionTypeExcludeD'; // return alive and dead patient
         $SOAPStr = view('siit_soap.SearchPatientDataDescriptionTypeExcludeD')->with(['key' => $hn])->render();
 
