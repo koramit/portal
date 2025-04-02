@@ -27,7 +27,10 @@ class PatientAPI implements AdmissionAPI, PatientAPIContract
      */
     public function getPatient(int $hn, bool $withSensitiveInfo): array
     {
-        return (new PatientFHIR)->getPatient('hn', $hn, false, $withSensitiveInfo);
+        if (Cache::get('SWITCH_TO_PATIENT_DSL') === true) {
+            return (new PatientFHIR)->getPatient('hn', $hn, false, $withSensitiveInfo);
+        }
+
         $action = 'http://tempuri.org/SearchPatientDataDescriptionTypeExcludeD'; // return alive and dead patient
         $SOAPStr = view('siit_soap.SearchPatientDataDescriptionTypeExcludeD')->with(['key' => $hn])->render();
 
@@ -301,6 +304,15 @@ class PatientAPI implements AdmissionAPI, PatientAPIContract
         $this->patient = $this->getPatient($data['hn'], $withSensitiveInfo);
         if (! $this->patient['ok']) {
             return $this->patient;
+        }
+
+        /* fallback soap api return incorrect response */
+        if (! $this->patient['found']) {
+            $this->patient = (new PatientFHIR)->getPatient('hn', $data['hn'], false, $withSensitiveInfo);
+            if (! $this->patient['ok']) {
+                return $this->patient;
+            }
+            Cache::put('SWITCH_TO_PATIENT_DSL', true, 3600);
         }
 
         $result = [
