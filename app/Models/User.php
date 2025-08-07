@@ -78,13 +78,6 @@ class User extends Authenticatable
         );
     }
 
-    public function lineNotifyEnabled(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->line_notify_token !== null,
-        );
-    }
-
     public function slackWebhookUrl(): Attribute
     {
         return Attribute::make(
@@ -94,9 +87,8 @@ class User extends Authenticatable
 
     public function notifiable(): Attribute
     {
-        // @TODO: remove LINE notify service
         return Attribute::make(
-            get: fn () => $this->slack_webhook_url || $this->line_notify_token,
+            get: fn () => $this->slack_webhook_url,
         );
     }
 

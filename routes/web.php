@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\InitRootController;
-use App\Http\Controllers\Auth\LINENotifySetupController;
 use App\Http\Controllers\Auth\RegisterUserController;
 use App\Http\Controllers\Auth\TwoFactorsChallengeController;
 use App\Http\Controllers\DashboardController;
@@ -41,18 +40,6 @@ Route::get('/2fa', [TwoFactorsChallengeController::class, 'create'])
 Route::post('/2fa', [TwoFactorsChallengeController::class, 'store'])
     ->middleware(['auth'])
     ->name('2fa.store');
-
-// LINE notify
-// @TODO: remove LINE notify service
-/*Route::controller(LINENotifySetupController::class)
-    ->name('line-notify')
-    ->group(function () {
-        Route::get('/line-notify-auth', 'create')
-            ->middleware(['auth'])
-            ->name('.auth');
-        Route::get('/line-notify-callback', 'store')
-            ->name('.callback');
-    });*/
 
 // Dashboard
 Route::get('/', DashboardController::class)
