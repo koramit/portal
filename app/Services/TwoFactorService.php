@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
-use App\Notifications\LINEBaseNotification;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 
 class TwoFactorService
@@ -18,6 +18,9 @@ class TwoFactorService
         $this->key = '2fa_code_'.$user->hashed_key;
     }
 
+    /**
+     * @throws ConnectionException
+     */
     public function notify(): void
     {
         if (cache()->has($this->key)) {
@@ -25,17 +28,15 @@ class TwoFactorService
         }
         $code = cache()->remember($this->key, now()->addMinutes(5), fn () => rand(1000, 9999));
         $message = 'กรุณายืนยันตัวตนด้วยการใส่รหัสผ่านสองขั้นตอนดังนี้: '.$code.' หากไม่ใส่รหัสผ่านสองขั้นตอนภายใน 5 นาที รหัสผ่านจะหมดอายุ';
-        if (! $this->user->slack_webhook_url) {
-            // @TODO: remove LINE notify service
-            $this->user->notify(new LINEBaseNotification($message));
 
-            return;
-        }
         Http::post($this->user->slack_webhook_url, [
             'text' => $message,
         ]);
     }
 
+    /**
+     * @throws ConnectionException
+     */
     public function verify(int $userCode): bool
     {
         if (! $verifyCode = cache($this->key)) { // expired

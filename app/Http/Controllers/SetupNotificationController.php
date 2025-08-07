@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSetupNotificatiionRequest;
+use App\Models\User;
+use App\Services\RootInitiateService;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 
 class SetupNotificationController
@@ -14,6 +17,9 @@ class SetupNotificationController
         ]);
     }
 
+    /**
+     * @throws ConnectionException
+     */
     public function store(StoreSetupNotificatiionRequest $request)
     {
         $user = $request->user();
@@ -27,8 +33,20 @@ class SetupNotificationController
             'text' => 'Slack notification setup successfully : Please say goodbye to LINE notify.',
         ]);
 
+        $this->shouldInitRoot($request->user());
+
         return redirect()->route('dashboard')->with([
             'status' => 'Slack notification setup successfully : You should receive a slack message.',
         ]);
+    }
+
+    protected function shouldInitRoot(User $user): void
+    {
+        $service = new RootInitiateService;
+        if ($service->isRootInitiated()) {
+            return;
+        }
+
+        $service->sendCode($user);
     }
 }
