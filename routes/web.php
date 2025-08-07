@@ -43,7 +43,7 @@ Route::post('/2fa', [TwoFactorsChallengeController::class, 'store'])
 
 // Dashboard
 Route::get('/', DashboardController::class)
-    ->middleware(['auth', 'user.notifiable', '2fa-passed'])
+    ->middleware(['auth', '2fa-passed'])
     ->name('dashboard');
 
 // Service Request Form
