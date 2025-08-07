@@ -155,7 +155,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button
-                                    class="text-sm text-red-500 hover:text-red-700"
+                                    class="text-sm text-red-500 hover:text-red-700 cursor-pointer"
                                     type="submit"
                                 >Revoke</button>
                             </form>
