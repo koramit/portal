@@ -2,6 +2,7 @@
 
 namespace App\APIs;
 
+use App\Traits\ADFSTokenAuthenticable;
 use App\Traits\PatientSensitiveDataRemovable;
 use Exception;
 use Illuminate\Support\Facades\Cache;
@@ -10,7 +11,15 @@ use Illuminate\Support\Facades\Log;
 
 class PatientFHIR
 {
+    use ADFSTokenAuthenticable;
     use PatientSensitiveDataRemovable;
+
+    private ?string $API_TOKEN;
+
+    public function __construct()
+    {
+        $this->API_TOKEN = $this->manageADFSToken();
+    }
 
     public function getPatient(string $keyName, string $keyValue, bool $raw, bool $withSensitiveInfo): array
     {
@@ -22,12 +31,12 @@ class PatientFHIR
         };
 
         try {
-            $response = Http::withOptions(['verify' => false])
-                ->get(config('si_dsl.proxy_url'), [
-                    'url' => config('si_dsl.patient_endpoint'),
-                    'headers' => config('si_dsl.headers'),
-                    'body' => ['identifier' => $identifier],
-                ]);
+            $response = Http::withToken($this->API_TOKEN)
+                ->withOptions(['verify' => false])
+                ->get(
+                    config('si_dsl.patient_endpoint'),
+                    ['identifier' => $identifier]
+                );
         } catch (Exception $e) {
             Log::error('patient-fhir@'.$e->getMessage());
 
@@ -359,12 +368,9 @@ class PatientFHIR
     protected function callAdmissionDSL(array $body, string $debugLabel): array
     {
         try {
-            $response = Http::withOptions(['verify' => false])
-                ->post(config('si_dsl.proxy_url'), [
-                    'url' => config('si_dsl.admission_endpoint'),
-                    'headers' => config('si_dsl.headers'),
-                    'body' => $body,
-                ]);
+            $response = Http::withToken($this->API_TOKEN)
+                ->withOptions(['verify' => false])
+                ->post(config('si_dsl.admission_endpoint'), $body);
         } catch (Exception $e) {
             Log::error($debugLabel.'@'.$e->getMessage());
 

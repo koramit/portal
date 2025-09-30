@@ -8,12 +8,15 @@ use Illuminate\Support\Facades\Log;
 
 trait ADFSTokenAuthenticable
 {
-    protected function manageADFSToken(string $cacheKey, string $clientId, string $clientSecret): ?string
+    protected function manageADFSToken(string $cacheKey = 'si-med-client-token', string $clientId = '', string $clientSecret = ''): ?string
     {
         if ($token = cache($cacheKey)) {
 
             return $token;
         }
+
+        $clientId = $clientId ?: config('siad.adfs_client_id');
+        $clientSecret = $clientSecret ?: config('siad.adfs_client_secret');
 
         try {
             $token = Http::asForm()

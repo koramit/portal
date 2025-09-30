@@ -2,12 +2,22 @@
 
 namespace App\APIs;
 
+use App\Traits\ADFSTokenAuthenticable;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class PatientAppointmentAPI
 {
+    use ADFSTokenAuthenticable;
+
+    private ?string $API_TOKEN;
+
+    public function __construct()
+    {
+        $this->API_TOKEN = $this->manageADFSToken();
+    }
+
     public function __invoke(string $keyName, string $keyValue, string $dateStart, ?string $dateEnd): array
     {
         $body = [];
@@ -23,13 +33,13 @@ class PatientAppointmentAPI
             ? ["ge$dateStart", "le$dateEnd"]
             : "eq$dateStart";
 
+        $url = config('si_dsl.appointment_endpoint').'?'.urldecode(http_build_query($body));
+        $url = preg_replace('/\[\d+]/', '', $url);
+
         try {
-            $response = Http::withOptions(['verify' => false])
-                ->get(config('si_dsl.proxy_url'), [
-                    'url' => config('si_dsl.appointment_endpoint'),
-                    'headers' => config('si_dsl.headers_fhir'),
-                    'body' => $body,
-                ]);
+            $response = Http::withToken($this->API_TOKEN)
+                ->withOptions(['verify' => false])
+                ->get($url);
         } catch (Exception $e) {
             Log::error('patient-appointment@'.$e->getMessage());
 
