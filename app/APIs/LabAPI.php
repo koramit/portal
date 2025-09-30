@@ -3,39 +3,26 @@
 namespace App\APIs;
 
 use App\Contracts\LabAPI as LabAPIContract;
+use App\Traits\ADFSTokenAuthenticable;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class LabAPI implements LabAPIContract
 {
+    use ADFSTokenAuthenticable;
+
     private ?string $API_TOKEN;
 
     protected string $TOKEN_CACHE_KEY = 'si-lis-client-token';
 
     public function __construct()
     {
-        if ($token = cache($this->TOKEN_CACHE_KEY)) {
-            $this->API_TOKEN = $token;
-
-            return;
-        }
-
-        try {
-            $this->API_TOKEN = Http::asForm()
-                ->withOptions(['verify' => false])
-                ->retry(3, 200)
-                ->post(config('si_lis.auth_url'), [
-                    'client_id' => config('si_lis.id'),
-                    'client_secret' => config('si_lis.secret'),
-                    'grant_type' => 'client_credentials',
-                ])->json()['access_token'];
-
-            cache()->put($this->TOKEN_CACHE_KEY, $this->API_TOKEN, now()->addHour());
-        } catch (Exception $e) {
-            Log::error('get_si_lis_api_token@'.$e->getMessage());
-            $this->API_TOKEN = null;
-        }
+        $this->API_TOKEN = $this->manageADFSToken(
+            $this->TOKEN_CACHE_KEY,
+            config('si_lis.id'),
+            config('si_lis.secret')
+        );
     }
 
     public function getLabPendingReports(int|string $hn): array

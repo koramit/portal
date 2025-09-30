@@ -2,6 +2,7 @@
 
 namespace App\APIs;
 
+use App\Traits\ADFSTokenAuthenticable;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -9,17 +10,23 @@ use Illuminate\Support\Facades\Validator;
 
 class EncounterAPI
 {
+    use ADFSTokenAuthenticable;
+
+    private ?string $API_TOKEN;
+
+    public function __construct()
+    {
+        $this->API_TOKEN = $this->manageADFSToken();
+    }
+
     public function __invoke(array $validated): array
     {
         $body = $this->getBody($validated);
 
         try {
-            $response = Http::withOptions(['verify' => false])
-                ->get(config('si_dsl.proxy_url'), [
-                    'url' => config('si_dsl.encounter_endpoint'),
-                    'headers' => config('si_dsl.headers'),
-                    'body' => $body,
-                ]);
+            $response = Http::withToken($this->API_TOKEN)
+                ->withOptions(['verify' => false])
+                ->get(config('si_dsl.encounter_endpoint'), $body);
         } catch (Exception $e) {
             Log::error('encounter@'.$e->getMessage());
 

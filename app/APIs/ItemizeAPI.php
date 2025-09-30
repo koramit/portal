@@ -2,38 +2,26 @@
 
 namespace App\APIs;
 
+use App\Traits\ADFSTokenAuthenticable;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class ItemizeAPI
 {
+    use ADFSTokenAuthenticable;
+
     protected ?string $API_TOKEN; // expires in 1 hour
 
     protected string $TOKEN_CACHE_KEY = 'item-master-auth-token';
 
     public function __construct()
     {
-        if ($token = cache($this->TOKEN_CACHE_KEY)) {
-            $this->API_TOKEN = $token;
-
-            return;
-        }
-
-        try {
-            $this->API_TOKEN = Http::asForm()
-                ->retry(3, 200)
-                ->post(config('itemize.auth_url'), [
-                    'client_id' => config('itemize.id'),
-                    'client_secret' => config('itemize.secret'),
-                    'grant_type' => 'client_credentials',
-                ])->json()['access_token'];
-
-            cache()->put($this->TOKEN_CACHE_KEY, $this->API_TOKEN, now()->addHour());
-        } catch (Exception $e) {
-            Log::error('get_item_master_api_token@'.$e->getMessage());
-            $this->API_TOKEN = null;
-        }
+        $this->API_TOKEN = $this->manageADFSToken(
+            $this->TOKEN_CACHE_KEY,
+            config('itemize.id'),
+            config('itemize.secret'),
+        );
     }
 
     public function getItem(string $category, string $search = '', string $itemStatus = 'ALL'): array
@@ -47,11 +35,13 @@ class ItemizeAPI
         try {
             if (isset($form['date_in'])) {
                 $result = Http::withToken($this->API_TOKEN)
+                    ->withOptions(['verify' => false])
                     ->retry(3, 200)
                     ->get(config('itemize.service_url').$category, $form)
                     ->json();
             } else {
                 $result = Http::withToken($this->API_TOKEN)
+                    ->withOptions(['verify' => false])
                     ->retry(3, 200)
                     ->post(config('itemize.service_url').$category, $form)
                     ->json();

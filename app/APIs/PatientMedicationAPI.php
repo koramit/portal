@@ -2,6 +2,7 @@
 
 namespace App\APIs;
 
+use App\Traits\ADFSTokenAuthenticable;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -9,21 +10,30 @@ use Illuminate\Support\Facades\Validator;
 
 class PatientMedicationAPI
 {
+    use ADFSTokenAuthenticable;
+
     const TIMEOUT_SECONDS = 60;
+
+    private ?string $API_TOKEN;
+
+    public function __construct()
+    {
+        $this->API_TOKEN = $this->manageADFSToken();
+    }
 
     public function __invoke(array $validated): array
     {
         $body = $this->getBody($validated);
 
+        $url = config('si_dsl.medication_endpoint').'?'.urldecode(http_build_query($body));
+        $url = preg_replace('/\[\d+]/', '', $url);
+
         try {
-            $response = Http::withOptions(['verify' => false])
+            $response = Http::withToken($this->API_TOKEN)
+                ->withOptions(['verify' => false])
                 ->timeout(static::TIMEOUT_SECONDS)
                 ->acceptJson()
-                ->get(config('si_dsl.proxy_url'), [
-                    'url' => config('si_dsl.medication_endpoint'),
-                    'headers' => config('si_dsl.headers_fhir'),
-                    'body' => $body,
-                ]);
+                ->get($url);
         } catch (Exception $e) {
             Log::error('patient-medication@'.$e->getMessage());
 
