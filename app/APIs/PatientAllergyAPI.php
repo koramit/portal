@@ -22,10 +22,13 @@ class PatientAllergyAPI implements \App\Contracts\PatientAllergyAPI
     {
         $body = ['patient.identifier' => "http://si.mahidol.ac.th/eHIS/MP_PATIENT|$hn"];
 
+        $url = config('si_dsl.allergy_endpoint').'?'.urldecode(http_build_query($body));
+        $url = preg_replace('/\[\d+]/', '', $url);
+
         try {
             $response = Http::withToken($this->API_TOKEN)
                 ->withOptions(['verify' => false])
-                ->get(config('si_dsl.allergy_endpoint'), $body);
+                ->get($url);
         } catch (Exception $e) {
             Log::error('patient-allergy@'.$e->getMessage());
 
