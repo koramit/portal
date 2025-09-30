@@ -2,21 +2,30 @@
 
 namespace App\APIs;
 
+use App\Traits\ADFSTokenAuthenticable;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class PatientAllergyAPI implements \App\Contracts\PatientAllergyAPI
 {
+    use ADFSTokenAuthenticable;
+
+    private ?string $API_TOKEN;
+
+    public function __construct()
+    {
+        $this->API_TOKEN = $this->manageADFSToken();
+    }
+
     public function __invoke(int|string $hn): array
     {
+        $body = ['patient.identifier' => "http://si.mahidol.ac.th/eHIS/MP_PATIENT|$hn"];
+
         try {
-            $response = Http::withOptions(['verify' => false])
-                ->get(config('si_dsl.proxy_url'), [
-                    'url' => config('si_dsl.allergy_endpoint'),
-                    'headers' => config('si_dsl.headers'),
-                    'body' => ['patient.identifier' => "http://si.mahidol.ac.th/eHIS/MP_PATIENT|$hn"],
-                ]);
+            $response = Http::withToken($this->API_TOKEN)
+                ->withOptions(['verify' => false])
+                ->get(config('si_dsl.allergy_endpoint'), $body);
         } catch (Exception $e) {
             Log::error('patient-allergy@'.$e->getMessage());
 
