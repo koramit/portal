@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\APIs\EncounterAPI;
 use App\APIs\ItemizeAPI;
+use App\APIs\LabAPI;
 use App\APIs\PatientAllergyAPI;
 use App\APIs\PatientAppointmentAPI;
 use App\APIs\PatientFHIR;
@@ -56,6 +57,10 @@ class TestSirirajAPI extends Command
         // Patient Medication API
         $medications = (new PatientMedicationAPI)(['hn' => $medicationHn, 'category' => 'opd', 'date_start' => '2025-01-01', 'date_end' => '2025-12-31']);
         $this->feedback('Patient Medication', $medications);
+
+        // Lap API
+        $labs = (new LabAPI)->getLabRecentlyOrders($encounterHn);
+        $this->feedback('Lab', $labs);
     }
 
     protected function feedback(string $apiName, array $result): void
