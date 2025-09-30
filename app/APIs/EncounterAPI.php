@@ -23,10 +23,13 @@ class EncounterAPI
     {
         $body = $this->getBody($validated);
 
+        $url = config('si_dsl.encounter_endpoint').'?'.urldecode(http_build_query($body));
+        $url = preg_replace('/\[\d+]/', '', $url);
+
         try {
             $response = Http::withToken($this->API_TOKEN)
                 ->withOptions(['verify' => false])
-                ->get(config('si_dsl.encounter_endpoint'), $body);
+                ->get($url);
         } catch (Exception $e) {
             Log::error('encounter@'.$e->getMessage());
 
