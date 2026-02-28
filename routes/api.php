@@ -23,6 +23,7 @@ use App\Http\Controllers\API\PatientAppointmentController;
 use App\Http\Controllers\API\PatientController;
 use App\Http\Controllers\API\PatientMedicationController;
 use App\Http\Controllers\API\PatientRecentlyAdmissionController;
+use App\Http\Controllers\API\PatientRecentlyAdmissionEncounterController;
 use App\Http\Controllers\API\WardAdmissionController;
 use Illuminate\Support\Facades\Route;
 
@@ -74,6 +75,13 @@ Route::middleware('auth:sanctum')
         Route::post('/patient-recently-admission-with-sensitive-data', PatientRecentlyAdmissionController::class)
             ->middleware('abilities:patient:recently-admission,patient:sensitive-data')
             ->name('api.patient-recently-admission-with-sensitive-data');
+
+        Route::post('/patient-recently-admission-encounter', PatientRecentlyAdmissionEncounterController::class)
+            ->middleware('ability:patient:recently-admission')
+            ->name('api.patient-recently-admission-encounter');
+        Route::post('/patient-recently-admission-encounter-with-sensitive-data', PatientRecentlyAdmissionEncounterController::class)
+            ->middleware('abilities:patient:recently-admission,patient:sensitive-data')
+            ->name('api.patient-recently-admission-encounter-with-sensitive-data');
 
         Route::post('/admission', AdmissionController::class)
             ->middleware('ability:admission:data')
