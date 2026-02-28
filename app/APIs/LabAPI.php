@@ -261,7 +261,7 @@ class LabAPI implements LabAPIContract
             'abnormal_label' => $item['ABNORMAL'],
             'units' => $item['UNITS'],
             'long_result_available' => $item['LONG_RES'],
-            'long_result_label' => $item['LONG_RESULT'],
+            'long_result_label' => $item['LONG_RESULT'] ?? null,
             'report_res' => $item['REPORT_RES'],
         ];
     }
