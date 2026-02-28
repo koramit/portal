@@ -136,7 +136,7 @@ class LabAPI implements LabAPIContract
     public function getLabFromServiceId(array $validated): array
     {
         $form = [
-            'HN' => $validated['hn'],
+            'HN' => (string) $validated['hn'],
             'GROUP_SERVICE_ID' => $validated['service_ids'],
             'GROUP' => ! ($validated['latest'] ?? true),
         ];
