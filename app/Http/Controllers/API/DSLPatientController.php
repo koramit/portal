@@ -18,20 +18,17 @@ class DSLPatientController
             'raw' => ['sometimes', 'bool'],
         ]);
 
-        $routeName = $request->route()->getName();
-        $withSensitiveInfo = $routeName === 'api.dsl.patient-with-sensitive-data';
-
         $data = $api->getPatient(
             $validated['key_name'],
             $validated['key_value'],
             $validated['raw'] ?? false,
-            $withSensitiveInfo
+            str_contains($request->route()->getName(), 'with-sensitive-data')
         );
 
         $this->log(
             $request->bearerToken(),
             $validated,
-            $routeName,
+            $request->route()->getName(),
             $data['found'] ?? false,
         );
 
