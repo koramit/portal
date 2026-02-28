@@ -174,7 +174,7 @@ class LabAPI implements LabAPIContract
     public function getLabFromItemCode(array $validated): array
     {
         $form = [
-            'HN' => $validated['hn'],
+            'HN' => (string) $validated['hn'],
             'GROUP_TI_CODE' => $validated['item_codes'],
         ];
         if (isset($validated['date_start']) && isset($validated['date_end'])) {
@@ -197,7 +197,7 @@ class LabAPI implements LabAPIContract
 
     public function getLabFromItemCodeAllResults(array $validated): array
     {
-        $form['HN'] = $validated['hn'];
+        $form['HN'] = (string) $validated['hn'];
         $form['TI_CODE'] = $validated['item_code'];
 
         try {
