@@ -13,7 +13,7 @@ trait ServiceAccessLoggable
             unset($payload['password']);
             $token->serviceAccessLogs()->create([
                 'payload' => $payload,
-                'route' => $route,
+                'route' => str_replace('.wf', '', $route),
                 'found' => $found,
             ]);
         });

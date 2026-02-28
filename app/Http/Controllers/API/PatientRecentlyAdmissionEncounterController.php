@@ -19,9 +19,7 @@ class PatientRecentlyAdmissionEncounterController extends Controller
             'hn' => ['required', 'digits:8'],
         ]);
 
-        $withSensitiveInfo = str_contains($request->route()->getName(), 'with-sensitive-data');
-
-        $data = $this->getRecentlyAdmission($validated['hn'], $withSensitiveInfo);
+        $data = $this->getRecentlyAdmission($validated['hn'], str_contains($request->route()->getName(), 'with-sensitive-data'));
         $this->log(
             $request->bearerToken(),
             $validated,

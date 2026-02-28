@@ -17,13 +17,16 @@ class DSLAdmissionController
             'raw' => ['sometimes', 'bool'],
         ]);
 
-        $routeName = $request->route()->getName();
-        $withSensitiveInfo = $routeName === 'api.dsl.admission-with-sensitive-data';
-        $data = $api->getAdmission($validated['an'], $validated['raw'] ?? false, $withSensitiveInfo);
+        $data = $api->getAdmission(
+            $validated['an'],
+            $validated['raw'] ?? false,
+            str_contains($request->route()->getName(), 'with-sensitive-data')
+        );
+
         $this->log(
             $request->bearerToken(),
             $validated,
-            $routeName,
+            $request->route()->getName(),
             $data['found'] ?? false,
         );
 

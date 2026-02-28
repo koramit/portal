@@ -18,9 +18,12 @@ class AuthenticateUserController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        $withSensitiveInfo = $request->route()->getName() === 'api.authenticate-with-sensitive-data';
+        $data = $api->authenticate(
+            $validated['login'],
+            $validated['password'],
+            str_contains($request->route()->getName(), 'with-sensitive-data')
+        );
 
-        $data = $api->authenticate($validated['login'], $validated['password'], $withSensitiveInfo);
         $this->log(
             $request->bearerToken(),
             $validated,

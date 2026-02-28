@@ -17,8 +17,7 @@ class PatientAdmissionController extends Controller
             'hn' => ['required', 'digits:8'],
         ]);
 
-        $withSensitiveInfo = $request->route()->getName() === 'api.patient-admissions-with-sensitive-data';
-        $data = $api->getPatientAdmissions($validated['hn'], $withSensitiveInfo);
+        $data = $api->getPatientAdmissions($validated['hn'], str_contains($request->route()->getName(), 'with-sensitive-data'));
         $this->log(
             $request->bearerToken(),
             $validated,
