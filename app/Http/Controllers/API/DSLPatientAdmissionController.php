@@ -17,13 +17,16 @@ class DSLPatientAdmissionController
             'raw' => ['sometimes', 'bool'],
         ]);
 
-        $routeName = $request->route()->getName();
-        $withSensitiveInfo = $routeName === 'api.dsl.patient-admissions-with-sensitive-data';
-        $data = $api->getPatientAdmissions($validated['hn'], $validated['raw'] ?? false, $withSensitiveInfo);
+        $data = $api->getPatientAdmissions(
+            $validated['hn'],
+            $validated['raw'] ?? false,
+            str_contains($request->route()->getName(), 'with-sensitive-data')
+        );
+
         $this->log(
             $request->bearerToken(),
             $validated,
-            $routeName,
+            $request->route()->getName(),
             $data['found'] ?? false,
         );
 
