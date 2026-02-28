@@ -19,7 +19,7 @@ class GetUserController extends Controller
             'with_sensitive_data' => ['nullable', 'boolean'],
         ]);
 
-        $withSensitiveInfo = $request->route()->getName() === 'api.user-with-sensitive-data';
+        $withSensitiveInfo = str_contains($request->route()->getName(), 'with-sensitive-data');
 
         if (isset($validated['org_id'])) {
             $data = $api->getUserById($validated['org_id'], $withSensitiveInfo);

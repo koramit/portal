@@ -17,8 +17,7 @@ class AdmissionController extends Controller
             'an' => ['required', 'digits:8'],
         ]);
 
-        $withSensitiveInfo = $request->route()->getName() === 'api.admission-with-sensitive-data';
-        $data = $api->getAdmission($validated['an'], $withSensitiveInfo);
+        $data = $api->getAdmission($validated['an'], str_contains($request->route()->getName(), 'with-sensitive-data'));
         $this->log(
             $request->bearerToken(),
             $validated,

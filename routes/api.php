@@ -184,4 +184,139 @@ Route::middleware('auth:sanctum')
         Route::post('/encounter', EncounterController::class)
             ->middleware('ability:encounter:results')
             ->name('api.encounter');
+
+        /** WAF Friendly Route Name Start Here */
+        Route::post('/u', GetUserController::class)
+            ->middleware('ability:user:data')
+            ->name('api.wf.user');
+        Route::post('/u/sd', GetUserController::class)
+            ->middleware('abilities:user:data,user:sensitive-data')
+            ->name('api.wf.user-with-sensitive-data');
+        Route::post('/auth', AuthenticateUserController::class)
+            ->middleware('ability:user:authenticate')
+            ->name('api.wf.authenticate');
+        Route::post('/auth/sd', AuthenticateUserController::class)
+            ->middleware('ability:user:authenticate')
+            ->name('api.wf.authenticate-with-sensitive-data');
+        Route::post('/auth/adfs', AuthenticateUserADFSController::class)
+            ->middleware('ability:user:authenticate')
+            ->name('api.wf.authenticate-adfs');
+
+        Route::post('/pt', PatientController::class)
+            ->middleware('ability:patient:data')
+            ->name('api.wf.patient');
+        Route::post('/pt/sd', PatientController::class)
+            ->middleware('abilities:patient:data,patient:sensitive-data')
+            ->name('api.wf.patient-with-sensitive-data');
+
+        Route::post('/pt/adm', PatientAdmissionController::class)
+            ->middleware('ability:patient:admissions')
+            ->name('api.wf.patient-admissions');
+        Route::post('/pt/adm/sd', PatientAdmissionController::class)
+            ->middleware('abilities:patient:admissions,patient:sensitive-data')
+            ->name('api.wf.patient-admissions-with-sensitive-data');
+
+        Route::post('/pt/adm/lst', PatientRecentlyAdmissionController::class)
+            ->middleware('ability:patient:recently-admission')
+            ->name('api.wf.patient-recently-admission');
+        Route::post('/pt/adm/lst/sd', PatientRecentlyAdmissionController::class)
+            ->middleware('abilities:patient:recently-admission,patient:sensitive-data')
+            ->name('api.wf.patient-recently-admission-with-sensitive-data');
+
+        Route::post('/pt/adm/lst/en', PatientRecentlyAdmissionEncounterController::class)
+            ->middleware('ability:patient:recently-admission')
+            ->name('api.wf.patient-recently-admission-encounter');
+        Route::post('/pt/adm/lst/en/sd', PatientRecentlyAdmissionEncounterController::class)
+            ->middleware('abilities:patient:recently-admission,patient:sensitive-data')
+            ->name('api.wf.patient-recently-admission-encounter-with-sensitive-data');
+
+        Route::post('/adm', AdmissionController::class)
+            ->middleware('ability:admission:data')
+            ->name('api.wf.admission');
+        Route::post('/adm/sd', AdmissionController::class)
+            ->middleware('abilities:admission:data,patient:sensitive-data')
+            ->name('api.wf.admission-with-sensitive-data');
+
+        Route::post('/w/adm', WardAdmissionController::class)
+            ->middleware('ability:ward:admissions')
+            ->name('api.wf.ward-admissions');
+
+        Route::post('/adm/dc', AdmissionDischargeDateController::class)
+            ->middleware('ability:ward:admissions')
+            ->name('api.wf.admission-discharge-date');
+
+        Route::post('/adm/mv', AdmissionTransferController::class)
+            ->middleware('ability:ward:admissions')
+            ->name('api.wf.admission-transfers');
+
+        Route::post('/lab/pending', LabPendingReportController::class)
+            ->middleware('ability:lab:pending')
+            ->name('api.wf.lab-pending');
+
+        Route::post('/lab/recently', LabRecentlyOrderController::class)
+            ->middleware('ability:lab:results')
+            ->name('api.wf.lab-recently');
+
+        Route::post('/lab/rno', [LabResultController::class, 'fromRefNo'])
+            ->middleware('ability:lab:results')
+            ->name('api.wf.lab-from-ref-no');
+
+        Route::post('/lab/sid', [LabResultController::class, 'fromServiceId'])
+            ->middleware('ability:lab:results')
+            ->name('api.wf.lab-from-service-id');
+
+        Route::post('/lab/ic', [LabResultController::class, 'fromItemCode'])
+            ->middleware('ability:lab:results')
+            ->name('api.wf.lab-from-item-code');
+
+        Route::post('/lab/ic/all', [LabResultController::class, 'fromItemCodeAllResult'])
+            ->middleware('ability:lab:results')
+            ->name('api.wf.lab-from-item-all');
+
+        Route::post('/dsl/pt', DSLPatientController::class)
+            ->middleware('ability:patient:data')
+            ->name('api.wf.dsl.patient');
+        Route::post('/dsl/pt/sd', DSLPatientController::class)
+            ->middleware('abilities:patient:data,patient:sensitive-data')
+            ->name('api.wf.dsl.patient-with-sensitive-data');
+
+        Route::post('/dsl/pt/adm', DSLPatientAdmissionController::class)
+            ->middleware('ability:patient:admissions')
+            ->name('api.wf.dsl.patient-admissions');
+        Route::post('/dsl/pt/adm/sd', DSLPatientAdmissionController::class)
+            ->middleware('abilities:patient:admissions,patient:sensitive-data')
+            ->name('api.wf.dsl.patient-admissions-with-sensitive-data');
+
+        Route::post('/dsl/pt/adm/lst', DSLPatientRecentlyAdmissionController::class)
+            ->middleware('ability:patient:recently-admission')
+            ->name('api.wf.dsl.patient-recently-admission');
+        Route::post('/dsl/pt/adm/lst/sd', DSLPatientRecentlyAdmissionController::class)
+            ->middleware('abilities:patient:recently-admission,patient:sensitive-data')
+            ->name('api.wf.dls.patient-recently-admission-with-sensitive-data');
+
+        Route::post('/dsl/adm', [DSLAdmissionController::class, 'show'])
+            ->middleware('ability:admission:data')
+            ->name('api.wf.dsl.admission');
+        Route::post('/dsl/adm/sd', [DSLAdmissionController::class, 'show'])
+            ->middleware('abilities:admission:data,patient:sensitive-data')
+            ->name('api.wf.dsl.admission-with-sensitive-data');
+        Route::post('/dsl/adm/pg', [DSLAdmissionController::class, 'index'])
+            ->middleware('abilities:admission:data,patient:sensitive-data')
+            ->name('api.wf.dsl.admission-with-sensitive-data');
+
+        Route::post('/pt/alg', PatientAllergyController::class)
+            ->middleware('ability:patient:allergy')
+            ->name('api.wf.patient-allergy');
+
+        Route::post('/pt/apm', PatientAppointmentController::class)
+            ->middleware('ability:patient:appointment')
+            ->name('api.wf.patient-appointment');
+
+        Route::post('/pt/med', PatientMedicationController::class)
+            ->middleware('ability:patient:medication')
+            ->name('api.wf.patient-medication');
+
+        Route::post('/en', EncounterController::class)
+            ->middleware('ability:encounter:results')
+            ->name('api.wf.encounter');
     });
