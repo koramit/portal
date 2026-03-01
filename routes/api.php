@@ -138,6 +138,10 @@ Route::middleware('auth:sanctum')
             ->middleware('ability:lab:results')
             ->name('api.lab-from-item-all');
 
+        Route::post('/lab-forward-request', [LabResultController::class, 'forwardRequest'])
+            ->middleware('ability:lab:results')
+            ->name('api.lab-forward-request');
+
         Route::post('/dsl/patient', DSLPatientController::class)
             ->middleware('ability:patient:data')
             ->name('api.dsl.patient');
@@ -272,6 +276,10 @@ Route::middleware('auth:sanctum')
         Route::post('/lab/ic/all', [LabResultController::class, 'fromItemCodeAllResult'])
             ->middleware('ability:lab:results')
             ->name('api.wf.lab-from-item-all');
+
+        Route::post('/lab/fwd/req', [LabResultController::class, 'forwardRequest'])
+            ->middleware('ability:lab:results')
+            ->name('api.wf.lab-forward-request');
 
         Route::post('/dsl/pt', DSLPatientController::class)
             ->middleware('ability:patient:data')

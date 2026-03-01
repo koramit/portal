@@ -85,4 +85,22 @@ class LabResultController
 
         return $data;
     }
+
+    public function forwardRequest(Request $request, LabAPI $api)
+    {
+        $validated = $request->validate([
+            'endpoint' => ['required', 'string'],
+            'body' => ['required', 'array'],
+        ]);
+
+        $data = $api->forwardRequest($validated);
+        $this->log(
+            $request->bearerToken(),
+            $validated,
+            $request->route()->getName(),
+            $data['found'] ?? false,
+        );
+
+        return $data;
+    }
 }

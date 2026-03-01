@@ -207,7 +207,7 @@ class LabAPI implements LabAPIContract
                 ->get(config('si_lis.service_url').'/reports/Items', $form)
                 ->json();
         } catch (Exception $e) {
-            Log::error('recently-reports@'.$e->getMessage());
+            Log::error('from-item-code-all@'.$e->getMessage());
 
             return [
                 'ok' => false,
@@ -227,6 +227,52 @@ class LabAPI implements LabAPIContract
             'ok' => true,
             'found' => true,
             'reports' => collect($result)->map(fn ($item) => $this->labItemWithHeaderCast($item))->values()->all(),
+        ];
+    }
+
+    public function forwardRequest(array $validated): array
+    {
+        $url = config('si_lis.service_url').'/'.$validated['endpoint'];
+
+        try {
+            $client = Http::withToken($this->API_TOKEN)
+                ->withOptions(['verify' => false])
+                ->retry(3, 200);
+
+            if ($validated['endpoint'] === 'reports/checkReport') {
+                $response = $client->post($url, $validated['body']);
+            } else {
+                $url = $url.'?'.urldecode(http_build_query($validated['body']));
+                $url = preg_replace('/\[\d+]/', '', $url);
+                $response = $client->get($url);
+            }
+        } catch (Exception $e) {
+            Log::error('forward-request@'.$e->getMessage());
+
+            return [
+                'ok' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
+
+        if ($response->status() !== 200) {
+            return [
+                'ok' => true,
+                'found' => false,
+                'response' => $response->json(),
+            ];
+        }
+
+        $result = $response->json();
+
+        if ($result === null || $result === []) {
+            return ['ok' => true, 'found' => false];
+        }
+
+        return [
+            'ok' => true,
+            'found' => true,
+            'response' => $result,
         ];
     }
 
