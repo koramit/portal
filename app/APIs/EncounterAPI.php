@@ -23,8 +23,12 @@ class EncounterAPI
     {
         $body = $this->getBody($validated);
 
-        $url = config('si_dsl.encounter_endpoint').'?'.urldecode(http_build_query($body));
-        $url = preg_replace('/\[\d+]/', '', $url);
+        if (isset($body['url'])) {
+            $url = config('si_dsl.encounter_endpoint').'/'.$body['url'];
+        } else {
+            $url = config('si_dsl.encounter_endpoint').'?'.urldecode(http_build_query($body));
+            $url = preg_replace('/\[\d+]/', '', $url);
+        }
 
         try {
             $response = Http::withToken($this->API_TOKEN)
@@ -50,9 +54,13 @@ class EncounterAPI
 
         $response = $response->json();
 
+        $found = isset($response['total'])
+            ? $response['total'] > 0
+            : ! isset($response['issue']);
+
         return [
             'ok' => true,
-            'found' => $response['total'] > 0,
+            'found' => $found,
             'response' => $response,
         ];
     }
@@ -69,6 +77,10 @@ class EncounterAPI
 
         if (array_key_exists('part_of', $validated)) {
             return ['part-of.identifier' => $validated['part_of']];
+        }
+
+        if (array_key_exists('url', $validated)) {
+            return ['url' => $validated['url']];
         }
 
         Validator::validate($validated, ['hn' => 'required']);
