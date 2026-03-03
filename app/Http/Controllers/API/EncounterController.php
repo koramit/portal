@@ -19,6 +19,7 @@ class EncounterController
             'status' => ['sometimes', 'in:finished,cancelled,in-progress'],
             'id' => ['sometimes', 'string'],
             'part_of' => ['sometimes', 'string'],
+            'url' => ['sometimes', 'string'],
             'request' => ['sometimes', 'array'],
         ]);
 
