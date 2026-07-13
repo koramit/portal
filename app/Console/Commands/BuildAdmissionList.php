@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Services\AdmissionManager;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class BuildAdmissionList extends Command
 {
@@ -46,7 +47,12 @@ class BuildAdmissionList extends Command
             ->tokens()
             ->first();
         for ($i = 0; $i < $ans->count(); $i++) {
-            $admit = $api->getAdmission($ans[$i], true);
+            try {
+                $admit = $api->getAdmission($ans[$i], true);
+            } catch (\Exception $e) {
+                Log::error('Error with AN: '.$ans[$i].' | '.$e->getMessage());
+                continue;
+            }
             $token->serviceAccessLogs()->create([
                 'payload' => ['an' => $ans[$i]],
                 'route' => 'api.admission',

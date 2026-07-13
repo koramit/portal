@@ -56,7 +56,7 @@ class PatientAPI implements AdmissionAPI, PatientAPIContract
         $data = (array) $response;
 
         if (($reply = $this->noResult($data['return_code'])) !== false) {
-            return $data['return_code'] === '1'
+            return ((int) $data['return_code']) === 1
                 ? (new PatientFHIR)->getPatient('hn', $hn, false, $withSensitiveInfo)
                 : $reply;
         }
