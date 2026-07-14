@@ -52,7 +52,7 @@ class BuildAdmissionList extends Command
             } catch (\Exception $e) {
                 Log::error('Error with AN: '.$ans[$i].' | '.$e->getMessage());
                 $call = AdmissionCall::query()->where('an', $ans[$i])->first();
-                $call->retry = 404;
+                $call->retry = 99;
                 $call->save();
 
                 continue;
