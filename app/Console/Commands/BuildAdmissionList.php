@@ -51,6 +51,10 @@ class BuildAdmissionList extends Command
                 $admit = $api->getAdmission($ans[$i], true);
             } catch (\Exception $e) {
                 Log::error('Error with AN: '.$ans[$i].' | '.$e->getMessage());
+                $call = AdmissionCall::query()->where('an', $ans[$i])->first();
+                $call->retry = 404;
+                $call->save();
+
                 continue;
             }
             $token->serviceAccessLogs()->create([
