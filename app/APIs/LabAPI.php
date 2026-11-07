@@ -67,13 +67,13 @@ class LabAPI implements LabAPIContract
         ];
     }
 
-    public function getLabRecentlyOrders(string $hn): array
+    public function getLabRecentlyOrders(string $hn, int $limit = 10): array
     {
         try {
             $result = Http::withToken($this->API_TOKEN)
                 ->withOptions(['verify' => false])
                 ->retry(3, 200)
-                ->get(config('si_lis.service_url').'/reports/'.$hn)
+                ->get(config('si_lis.service_url').'/reports/'.$hn, ['limit' => $limit])
                 ->json();
         } catch (Exception $e) {
             Log::error('recently-reports@'.$e->getMessage());
