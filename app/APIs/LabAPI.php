@@ -25,7 +25,7 @@ class LabAPI implements LabAPIContract
         );
     }
 
-    public function getLabPendingReports(int|string $hn): array
+    public function getLabPendingReports(int|string $hn, bool $raw = false): array
     {
         $result = $this->makePost('/reports/checkReport', [
             'HN' => (string) $hn,
@@ -39,6 +39,14 @@ class LabAPI implements LabAPIContract
             return [
                 'ok' => true,
                 'found' => false,
+            ];
+        }
+
+        if ($raw) {
+            return [
+                'ok' => true,
+                'found' => true,
+                'result' => $result,
             ];
         }
 
@@ -67,13 +75,13 @@ class LabAPI implements LabAPIContract
         ];
     }
 
-    public function getLabRecentlyOrders(string $hn): array
+    public function getLabRecentlyOrders(string $hn, int $limit = 10, bool $raw = false): array
     {
         try {
             $result = Http::withToken($this->API_TOKEN)
                 ->withOptions(['verify' => false])
                 ->retry(3, 200)
-                ->get(config('si_lis.service_url').'/reports/'.$hn)
+                ->get(config('si_lis.service_url').'/reports/'.$hn, ['limit' => $limit])
                 ->json();
         } catch (Exception $e) {
             Log::error('recently-reports@'.$e->getMessage());
@@ -86,6 +94,14 @@ class LabAPI implements LabAPIContract
 
         if ($result === null) {
             return ['ok' => false, 'serverError' => true];
+        }
+
+        if ($raw) {
+            return [
+                'ok' => true,
+                'found' => true,
+                'result' => $result,
+            ];
         }
 
         $orders = collect($result)->map(fn ($item) => [
@@ -106,12 +122,20 @@ class LabAPI implements LabAPIContract
         ];
     }
 
-    public function getLabFromRefNo(string $refNo): array
+    public function getLabFromRefNo(string $refNo, bool $raw = false): array
     {
         $result = $this->makePost('/reports/Detail', ['REF_NO' => $refNo]);
 
         if ($result === null) {
             return ['ok' => true, 'found' => false];
+        }
+
+        if ($raw) {
+            return [
+                'ok' => true,
+                'found' => true,
+                'result' => $result,
+            ];
         }
 
         return [
@@ -151,6 +175,14 @@ class LabAPI implements LabAPIContract
             return ['ok' => true, 'found' => false];
         }
 
+        if ($validated['raw'] ?? false) {
+            return [
+                'ok' => true,
+                'found' => true,
+                'result' => $result,
+            ];
+        }
+
         return [
             'ok' => true,
             'found' => true,
@@ -188,6 +220,14 @@ class LabAPI implements LabAPIContract
             return ['ok' => true, 'found' => false];
         }
 
+        if ($validated['raw'] ?? false) {
+            return [
+                'ok' => true,
+                'found' => true,
+                'result' => $result,
+            ];
+        }
+
         return [
             'ok' => true,
             'found' => true,
@@ -221,6 +261,14 @@ class LabAPI implements LabAPIContract
 
         if ($result === []) {
             return ['ok' => true, 'found' => false];
+        }
+
+        if ($validated['raw'] ?? false) {
+            return [
+                'ok' => true,
+                'found' => true,
+                'result' => $result,
+            ];
         }
 
         return [

@@ -6,7 +6,7 @@ interface LabAPI
 {
     public function getLabPendingReports(string $hn): array;
 
-    public function getLabRecentlyOrders(string $hn): array;
+    public function getLabRecentlyOrders(string $hn, int $limit): array;
 
     public function getLabFromRefNo(string $refNo): array;
 

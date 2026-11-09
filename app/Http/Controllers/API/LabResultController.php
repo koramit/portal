@@ -14,9 +14,10 @@ class LabResultController
     {
         $validated = $request->validate([
             'ref_no' => ['required', 'string'],
+            'raw' => ['sometimes', 'boolean'],
         ]);
 
-        $data = $api->getLabFromRefNo($validated['ref_no']);
+        $data = $api->getLabFromRefNo($validated['ref_no'], $validated['raw'] ?? false);
         $this->log(
             $request->bearerToken(),
             $validated,
@@ -35,6 +36,7 @@ class LabResultController
             'latest' => ['nullable', 'boolean'],
             'date_start' => ['nullable', 'date'],
             'date_end' => ['nullable', 'date'],
+            'raw' => ['sometimes', 'boolean'],
         ]);
 
         $data = $api->getLabFromServiceId($validated);
@@ -55,6 +57,7 @@ class LabResultController
             'item_codes' => ['required', 'array'],
             'date_start' => ['nullable', 'date'],
             'date_end' => ['nullable', 'date'],
+            'raw' => ['sometimes', 'boolean'],
         ]);
 
         $data = $api->getLabFromItemCode($validated);
@@ -73,6 +76,7 @@ class LabResultController
         $validated = $request->validate([
             'hn' => ['required', 'digits:8'],
             'item_code' => ['required', 'string'],
+            'raw' => ['sometimes', 'boolean'],
         ]);
 
         $data = $api->getLabFromItemCodeAllResults($validated);
