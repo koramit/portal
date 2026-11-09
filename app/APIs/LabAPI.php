@@ -46,7 +46,7 @@ class LabAPI implements LabAPIContract
             return [
                 'ok' => true,
                 'found' => true,
-                'result' => $result,
+                'response' => $result,
             ];
         }
 
@@ -100,7 +100,7 @@ class LabAPI implements LabAPIContract
             return [
                 'ok' => true,
                 'found' => true,
-                'result' => $result,
+                'response' => $result,
             ];
         }
 
@@ -134,7 +134,7 @@ class LabAPI implements LabAPIContract
             return [
                 'ok' => true,
                 'found' => true,
-                'result' => $result,
+                'response' => $result,
             ];
         }
 
@@ -179,7 +179,7 @@ class LabAPI implements LabAPIContract
             return [
                 'ok' => true,
                 'found' => true,
-                'result' => $result,
+                'response' => $result,
             ];
         }
 
@@ -224,7 +224,7 @@ class LabAPI implements LabAPIContract
             return [
                 'ok' => true,
                 'found' => true,
-                'result' => $result,
+                'response' => $result,
             ];
         }
 
@@ -267,7 +267,7 @@ class LabAPI implements LabAPIContract
             return [
                 'ok' => true,
                 'found' => true,
-                'result' => $result,
+                'response' => $result,
             ];
         }
 
