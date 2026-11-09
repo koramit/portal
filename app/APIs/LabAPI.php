@@ -290,9 +290,12 @@ class LabAPI implements LabAPIContract
             if ($validated['endpoint'] === 'reports/checkReport') {
                 $response = $client->post($url, $validated['body']);
             } else {
-                $url = $url.'?'.urldecode(http_build_query($validated['body']));
-                $url = preg_replace('/\[\d+]/', '', $url);
+                if (isset($validated['body'])) {
+                    $url = $url.'?'.urldecode(http_build_query($validated['body']));
+                    $url = preg_replace('/\[\d+]/', '', $url);
+                }
                 $response = $client->get($url);
+
             }
         } catch (Exception $e) {
             Log::error('forward-request@'.$e->getMessage());

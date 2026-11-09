@@ -94,7 +94,7 @@ class LabResultController
     {
         $validated = $request->validate([
             'endpoint' => ['required', 'string'],
-            'body' => ['required', 'array'],
+            'body' => ['nullable', 'array'],
         ]);
 
         $data = $api->forwardRequest($validated);
