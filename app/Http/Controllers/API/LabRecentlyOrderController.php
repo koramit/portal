@@ -14,10 +14,15 @@ class LabRecentlyOrderController
     {
         $validated = $request->validate([
             'hn' => ['required', 'digits:8'],
-            'limit' => ['sometimes', 'integer', 'min:1', 'max:1000']
+            'limit' => ['sometimes', 'integer', 'min:1', 'max:1000'],
+            'raw' => ['sometimes', 'boolean'],
         ]);
 
-        $data = $api->getLabRecentlyOrders($validated['hn'], $validated['limit'] ?? 10);
+        $data = $api->getLabRecentlyOrders(
+            $validated['hn'],
+     $validated['limit'] ?? 10,
+            $validated['raw'] ?? false
+        );
         $this->log(
             $request->bearerToken(),
             $validated,

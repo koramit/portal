@@ -14,9 +14,10 @@ class LabPendingReportController
     {
         $validated = $request->validate([
             'hn' => ['required', 'digits:8'],
+            'raw' => ['sometimes', 'boolean'],
         ]);
 
-        $data = $api->getLabPendingReports($validated['hn']);
+        $data = $api->getLabPendingReports($validated['hn'], $validated['raw'] ?? false);
         $this->log(
             $request->bearerToken(),
             $validated,
